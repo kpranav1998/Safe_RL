@@ -2,205 +2,64 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="uploading files">
-      <change afterPath="$PROJECT_DIR$/../.idea/D.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/.idea/Airflow.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/Token.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/WSGIserver.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/symmDiff.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/webserver3c.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airflow/webserver3d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../C/Users/Rohan/AppData/Roaming/npm/node_modules/@vue/cli/node_modules/@vue/cli-ui/node_modules/clone/clone.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../C/Users/Rohan/AppData/Roaming/npm/node_modules/@vue/cli/node_modules/clone/clone.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../C/Users/Rohan/Desktop/FTP Folder/.idea/FTP Folder.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/DataStructures.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DataStructures/DataStructures.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Django/.idea/Django.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Django/demonstration/app/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DynamicArray/DynamicArray.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/BillSharingMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/Contribution.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/Expense.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/ExpenseGroup.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/ExpenseStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ExpenseSharingApp/src/main/java/com/gb/billsharing/model/UserShare.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FileHistory/Rohan/DESKTOP-SFQC0D5/Data/C/Users/Rohan/Desktop/FTP Folder/.idea/FTP Folder (2020_07_13 12_32_54 UTC).iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FileHistory/Rohan/DESKTOP-SFQC0D5/Data/C/Users/Rohan/IdeaProjects/VuePractice/.idea/VuePractice (2020_07_13 12_32_54 UTC).iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GitClone/Repository.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GitClone/libwyag.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GitClone/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GitClone/wyag.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/.idea/Micesllaneous.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/scrappy.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Micesllaneous/scrappy/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MongoDb/MongoDb.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NeuralNetworks/.idea/NeuralNetworks.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Practice-D/.idea/Practice-D.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/React.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/example-app/.idea/example-app.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/jira_clone" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/my-app/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/my-app/src/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/my-clock/.idea/my-clock.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/my-components/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/react-budget-app.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/src/Add.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/src/Balance.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/react-budget-app/src/Transaction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/bot.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/config.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/BaseStressClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/NPCClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/NpcConstants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/model/BotSpeed.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/model/BotStrength.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/model/NPCDistanceThreshold.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFS2X_Java_Android_Examples/SFS2XConnector/src/sfs2x/client/npcai/model/NPCModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/MyJavaExtension.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/lib/SFS2X_API_Java.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/lib/netty-3.2.2.Final.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/lib/sfs2x-client-core.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/lib/slf4j-api-1.6.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/lib/slf4j-simple-1.6.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/src/MyExtension.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SFSServerExtension/src/PriorityQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Datagram/Datagram.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Extensions/Extensions.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/I18/I18.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/JDBCTutorial/JDBCTutorial.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Netbeans/netbeans/enterprise/enterprise.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Netbeans/netbeans/harness/nbi/stub/ext/components/components.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Netbeans/netbeans/harness/nbi/stub/ext/engine/engine.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Netbeans/netbeans/java/netbeans.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/Socket/Socket.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/maven/maven.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/maven/src.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/mozilla/IndexDB/IndexDB.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/mozilla/mozilla.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/uploading-files/.idea/uploading-files.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SpringReactive/SpringReactive.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../hello-world/.idea/hello-world.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lambda/lambda.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../python-server/.idea/python-server.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../rabbit-mq-tutorials/src/main/java/org/springframework/amqp/tutorials/RabbitAmqpTutorialsRunner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../rabbit-mq-tutorials/src/main/java/org/springframework/amqp/tutorials/rabbitmqtutorials/RabbitMqTutorialsApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../rabbit-mq-tutorials/src/main/java/org/springframework/amqp/tutorials/tut1/Tut1Config.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../rabbit-mq-tutorials/src/main/java/org/springframework/amqp/tutorials/tut1/Tut1Receiver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../rabbit-mq-tutorials/src/main/java/org/springframework/amqp/tutorials/tut1/Tut1Sender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.eslintignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.eslintrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/react-clock-basic.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/components/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/components/Clock.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/components/Display.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/components/Header.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/components/Panel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/lib/DateTime.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/_base.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/_settings.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/app.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/components/_display.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/components/_header.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/src/styles/components/_panel.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Lib/site-packages/setuptools.pth" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install-3.8-script.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install-3.8.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install-3.8.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install-script.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/easy_install.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip-script.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3-script.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3.8-script.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3.8.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3.8.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/venv/Scripts/pip3.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-clock-basic/webpack.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper22.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper23.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper32.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/gradle_wrapper42.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper22.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper23.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/libraries/maven_wrapper32.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/main/java/com/okta/springbootvue/RestRepositoryConfigurator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/main/java/com/okta/springbootvue/SpringBootVueApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/main/java/com/okta/springbootvue/Todo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/main/java/com/okta/springbootvue/TodoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/SpringBootVueApplication/server/src/test/java/com/okta/springbootvue/SpringBootVueApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/src/main/resources/static/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ui/ui.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/untitled.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../untitled/test1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/jira_clone" beforeDir="false" afterPath="$PROJECT_DIR$/../React/jira_clone" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/Normal_DQN/breakout_rpf_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/Normal_DQN/breakout_rpf_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/good_264/seed_1/breakout_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/good_264/seed_1/breakout_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/good_264/seed_2/breakout_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/good_264/seed_2/breakout_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/good_264/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/good_264/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/good_264/seed_3/breakout_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/good_264/seed_3/breakout_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/good_264/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/good_264/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/medium_162/seed_1/breakout_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/medium_162/seed_1/breakout_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/medium_162/seed_2/breakout_rpf_safe_0012021279_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/medium_162/seed_2/breakout_rpf_safe_0012021279_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Breakout/medium_162/seed_3/breakout_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Breakout/medium_162/seed_3/breakout_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_1/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_1/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_1/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_1/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_2/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_2/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Good_25/seed_3/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Good_25/seed_3/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_1/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_1/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_1/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_1/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_2/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_2/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Medium_15/seed_3/freeway_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Medium_15/seed_3/freeway_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Freeway/Normal_DQN/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Freeway/Normal_DQN/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_1/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_1/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_1/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_1/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_2/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_2/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Good_18/seed_3/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Good_18/seed_3/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_1/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_1/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_1/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_1/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_2/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_2/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Medium_7/seed_3/pong_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Medium_7/seed_3/pong_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Normal_DQN/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/pong_rpf_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Pong/Normal_DQN/pong_rpf_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_1/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_1/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_1/qbert_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_1/qbert_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_2/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_2/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_2/qbert_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_2/qbert_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_3/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_3/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Good_10975/seed_3/qbert_rpf_safe_0000000000_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Good_10975/seed_3/qbert_rpf_safe_0000000000_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qbert/Normal_DQN/eval_rewards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Qbert/Normal_DQN/eval_rewards.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/code/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/dqn_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/dqn_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/env.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/my_grid_world.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/plot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/random_prior_gridworld.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/replay.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/run_bootstrap.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/run_with_baseline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +74,13 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectId" id="1wE5Q94N1knbCahbMC85uah3Un3" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />

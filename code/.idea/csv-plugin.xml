@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CsvFileAttributes">
+    <option name="attributeMap">
+      <map>
+        <entry key="C:\Users\Rohan\Downloads\20180823-gym-v2-results\half-cheetah\default\20180823-merge-check-gaussian-1\merge-check-gaussian-1-0\progress.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="C:\Users\Rohan\Downloads\20180823-gym-v2-results\hopper\default\20180823-merge-check-gaussian-1\merge-check-gaussian-1-1\progress.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="C:\Users\Rohan\Downloads\20180823-gym-v2-results\humanoid\default\20180823-merge-check-gaussian-1\merge-check-gaussian-1-1\progress.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="C:\Users\Rohan\Downloads\real_price.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="C:\Users\Rohan\Downloads\test_predicted.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
