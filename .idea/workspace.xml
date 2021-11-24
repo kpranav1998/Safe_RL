@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding results for Ant">
+    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding gitignore">
       <change beforePath="$PROJECT_DIR$/../React/jira_clone" beforeDir="false" afterPath="$PROJECT_DIR$/../React/jira_clone" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" afterDir="false" />
@@ -189,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629038946458</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Adding gitignore">
+      <created>1637779658401</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1637779658401</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -224,6 +231,7 @@
     <MESSAGE value="uploading files" />
     <MESSAGE value="uploading continous env files" />
     <MESSAGE value="Adding results for Ant" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding results for Ant" />
+    <MESSAGE value="Adding gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding gitignore" />
   </component>
 </project>
