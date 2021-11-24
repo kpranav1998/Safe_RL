@@ -11,8 +11,10 @@ The file main_safe.py is used to run an ensemble of RL agents within the Safe RL
 ```bash
 python3 main_safe.py --alpha 0.2
 ```
-
-
+To run an normal ensemble of SAC agents use the following code
+```bash
+python3 main.py --alpha 0.2
+```
 ### Arguments
 ------------
 ```
