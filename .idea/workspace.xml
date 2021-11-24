@@ -2,33 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding results for Ant">
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/args.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/reward.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/args.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/reward.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/avg_reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/avg_uncertainity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/args.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/args.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/args.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/jira_clone" beforeDir="false" afterPath="$PROJECT_DIR$/../React/jira_clone" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" afterDir="false" />
@@ -53,6 +26,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1wE5Q94N1knbCahbMC85uah3Un3" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
