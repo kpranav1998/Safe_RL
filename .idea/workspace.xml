@@ -2,6 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding results for Ant">
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/args.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/reward.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/args.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/reward.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/avg_reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/avg_uncertainity.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/args.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/args.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/args.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.npy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/jira_clone" beforeDir="false" afterPath="$PROJECT_DIR$/../React/jira_clone" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot-vue/gs-messaging-rabbitmq" afterDir="false" />
@@ -21,7 +48,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="278389bf92f3c315bad89a11e43518d65cec9a46" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -195,7 +222,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="HEAD" />
                       </list>
                     </value>
                   </entry>
@@ -215,6 +242,7 @@
     <MESSAGE value="Updating files" />
     <MESSAGE value="uploading files" />
     <MESSAGE value="uploading continous env files" />
-    <option name="LAST_COMMIT_MESSAGE" value="uploading continous env files" />
+    <MESSAGE value="Adding results for Ant" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding results for Ant" />
   </component>
 </project>
