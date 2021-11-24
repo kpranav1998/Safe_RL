@@ -595,7 +595,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/qbert_5000.pkl',
+                        default='/home/chen-2/model_savedir/breakout_rpf01/breakout_rpf_0002000660q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -611,9 +611,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/qbert.bin',  # gym prefix
+        "GAME": 'roms/breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'qbert_rpf_safe',  # start files with name
+        "NAME": 'breakout_rpf_safe',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -623,7 +623,7 @@ if __name__ == '__main__':
         "BERNOULLI_PROBABILITY": 0.9,
         # Probability of experience to go to each head - if 1, every experience goes to every head
         "TARGET_UPDATE": 100000,  # how often to update target network
-        "MIN_HISTORY_TO_LEARN": 32,  # in environment frames
+        "MIN_HISTORY_TO_LEARN": 100000,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
@@ -803,8 +803,8 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    train(start_step_number, start_last_save)
-    #baseline_evaluate()
+    #train(start_step_number, start_last_save)
+    baseline_evaluate()
     # evaluate(0)
 
     ## pong_rpf_0001406541q = -4

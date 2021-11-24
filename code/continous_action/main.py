@@ -16,7 +16,7 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Hopper-v2",
+parser.add_argument('--env-name', default="Ant-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
@@ -42,7 +42,7 @@ parser.add_argument('--automatic_entropy_tuning', type=bool, default=False, meta
                     help='Automaically adjust α (default: False)')
 parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metavar='N',
                     help='random seed (default: 123456)')
-parser.add_argument('--batch_size', type=int, default=32, metavar='N',
+parser.add_argument('--batch_size', type=int, default=64, metavar='N',
                     help='batch size (default: 256)')
 parser.add_argument('--num_steps', type=int, default=int(10e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')

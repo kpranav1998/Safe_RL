@@ -20,8 +20,8 @@ parser.add_argument('--env-name', default="Ant-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Ant-v2_0/model_4550.315506961048.pkl")
-parser.add_argument('--baseline_performance',default=4500, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./results/Ant-v2_0/model_5500.366973855161.pkl")
+parser.add_argument('--baseline_performance',default=5000, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -119,8 +119,8 @@ def average_plot(list,y_label,save_path, margin=3):
     plt.savefig(save_path + '.png')
 
 
-
 '''
+
 episodes = []
 for i in range(50):
     state = env.reset()

@@ -6,13 +6,13 @@ import numpy.ma as ma
 from itertools import zip_longest
 
 GAME_NAME = "Ant"
-LOAD_PATH = "../"+str(GAME_NAME)+"/Good"
+LOAD_PATH = "../../"+str(GAME_NAME)+"/Medium"
 
 folders = os.listdir(LOAD_PATH)
 rewards = []
 uncertainities = []
 
-BASELINE_VALUE  = 3500
+BASELINE_VALUE  =  3500
 def average_plot(l,margin=100):
     avg_list = []
     for i in range(l.shape[0] - margin):
@@ -25,9 +25,9 @@ def average_plot(l,margin=100):
     return avg_list
 
 
-base_reward = np.load("../"+str(GAME_NAME)+"/Normal/reward.npy")
-base_reward =base_reward[:1800]
-base_reward = average_plot(base_reward)
+base_reward = np.load("../../"+str(GAME_NAME)+"/Normal/reward.npy")
+#base_reward =base_reward[:1800]
+base_reward = average_plot(base_reward,50)
 lengths = []
 for folder in folders:
 
@@ -59,7 +59,7 @@ plt.close()
 
 
 
-base_uncertainity = np.load("../Walker2D/Normal/uncertainity.npy",allow_pickle=True)
+base_uncertainity = np.load("../../Breakout/Normal_DQN/uncertainity.npy",allow_pickle=True)
 for i in range(len(base_uncertainity)):
     base_uncertainity[i] = np.mean(base_uncertainity[i])
 
@@ -84,12 +84,15 @@ for folder in folders:
         plt.close()
 
 avg_uncertainity = 0
-length = min(lengths)
+
+avg_uncertainity = np.nanmean(np.array(list(zip_longest(*uncertainities)),dtype=float),axis=1)
+
+'''length = min(lengths)
 for uncertainity in uncertainities:
     avg_uncertainity += uncertainity[0:length]
 
 avg_uncertainity = avg_uncertainity/len(uncertainities)
-
+'''
 plt.figure()
 plt.ylabel('uncertainity')
 plt.plot(avg_uncertainity, 'b') # uncertainity_1

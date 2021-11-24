@@ -57,7 +57,6 @@ class SAC(object):
             self.policy_optim = Adam(self.policy.parameters(), lr=args.lr)
 
 
-        self.load_checkpoint(ckpt_path="./results/Ant-v2_0/model_-23.27489352070947.pkl")
 
 
     def select_action(self, state, evaluate=False):
