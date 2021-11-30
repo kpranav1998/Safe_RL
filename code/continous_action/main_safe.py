@@ -16,11 +16,11 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Ant-v2",
+parser.add_argument('--env-name', default="Hopper-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Ant-v2_0/model_5500.366973855161.pkl")
+parser.add_argument('--safe_path',type=str,default="./results/Hopper-v2_safe_2/model_1667.4469601583696.pkl")
 parser.add_argument('--baseline_performance',default=5000, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(3.5e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -57,6 +57,7 @@ parser.add_argument('--replay_size', type=int, default=1000000, metavar='N',
                     help='size of replay buffer (default: 10000000)')
 parser.add_argument('--cuda', action="store_true",
                     help='run on CUDA (default: False)')
+
 args = parser.parse_args()
 arg_dict = vars(args)
 
@@ -94,12 +95,12 @@ total_numsteps = 0
 updates = 0
 
 run_num = 0
-
-'''reward_list = np.load("./results/Hopper-v2_safe_43/reward.npy").tolist()
-uncertainity_list = np.load("./results/Hopper-v2_safe_43/uncertainity.npy",allow_pickle=True).tolist()'''
+'''reward_list = np.load("./results/Hopper-v2_safe_50/reward.npy").tolist()
+uncertainity_list = np.load("./results/Hopper-v2_safe_50/uncertainity.npy",allow_pickle=True).tolist()'''
 
 reward_list = []
 uncertainity_list = []
+
 
 
 

@@ -560,32 +560,38 @@ def baseline_evaluate():
          #########################
          """)
     eval_rewards = []
-    evaluate_step_number = 0
     frames_for_gif = []
     results_for_eval = []
     # only run one
-    state = env.reset()
-    episode_reward_sum = 0
-    terminal = False
-    life_lost = True
-    steps = 0
-    episode_steps = 0
-    while not terminal:
-        UNCERTAINITY = False
-        steps = steps + 1
-        if life_lost:
-            action = 1
-        else:
-            eps, action, UNCERTAINITY, LCB, safe_LCB, x = action_getter.pt_get_action(int(3e6), state=state, active_head=None,baseline_evaluation = True)
-        next_state, reward, life_lost, terminal = env.step(action)
+    for i in range(30):
+        np.random.seed(random.randint(1,100000))
+        torch.manual_seed(random.randint(1,100000))
+        evaluate_step_number = 0
+        state = env.reset()
+        episode_reward_sum = 0
+        terminal = False
+        life_lost = True
+        steps = 0
+        episode_steps = 0
 
-        evaluate_step_number += 1
-        episode_steps += 1
-        episode_reward_sum += reward
+        while not terminal:
+            UNCERTAINITY = False
+            steps = steps + 1
+            if life_lost:
+                action = 1
+            else:
+                eps, action, UNCERTAINITY, LCB, safe_LCB, x = action_getter.pt_get_action(int(3e6), state=state, active_head=None,baseline_evaluation = True)
+            next_state, reward, life_lost, terminal = env.step(action)
+
+            evaluate_step_number += 1
+            episode_steps += 1
+            episode_reward_sum += reward
+
+            state = next_state
+        eval_rewards.append(episode_reward_sum)
         print(episode_reward_sum)
 
-        state = next_state
-    print("Evaluation score:\n", episode_reward_sum)
+    print("Evaluation score:\n", np.mean(eval_rewards))
 
 
 if __name__ == '__main__':
@@ -595,7 +601,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='/home/chen-2/model_savedir/breakout_rpf01/breakout_rpf_0002000660q.pkl',
+                        default='./results/pong_7.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -611,9 +617,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/breakout.bin',  # gym prefix
+        "GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'breakout_rpf_safe',  # start files with name
+        "NAME": 'pong_rpf_safe',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
