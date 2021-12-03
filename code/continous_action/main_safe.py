@@ -20,8 +20,8 @@ parser.add_argument('--env-name', default="Hopper-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Hopper-v2_safe_2/model_1667.4469601583696.pkl")
-parser.add_argument('--baseline_performance',default=5000, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./results/model_2806.139761915278.pkl")
+parser.add_argument('--baseline_performance',default=2300, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -95,8 +95,8 @@ total_numsteps = 0
 updates = 0
 
 run_num = 0
-'''reward_list = np.load("./results/Hopper-v2_safe_50/reward.npy").tolist()
-uncertainity_list = np.load("./results/Hopper-v2_safe_50/uncertainity.npy",allow_pickle=True).tolist()'''
+'''reward_list = np.load("./results/Hopper-v2_safe_4/reward.npy").tolist()
+uncertainity_list = np.load("./results/Hopper-v2_safe_4/uncertainity.npy",allow_pickle=True).tolist()'''
 
 reward_list = []
 uncertainity_list = []
@@ -226,5 +226,4 @@ for i_episode in itertools.count(1):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()
-
 

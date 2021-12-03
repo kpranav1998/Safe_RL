@@ -179,7 +179,7 @@ class SAC_Safe(object):
     def load_checkpoint_safe(self, ckpt_path, evaluate=False):
         print('Loading models from {}'.format(ckpt_path))
         if ckpt_path is not None:
-            '''c2 = torch.load("./results/Hopper-v2_safe_50/model_3752.178210625095.pkl", map_location=self.device)
+            '''c2 = torch.load("./results/Hopper-v2_safe_4/model_3310.4822838340683.pkl", map_location=self.device)
             self.policy.load_state_dict(c2['policy_state_dict'])
             self.critic.load_state_dict(c2['critic_state_dict'])
             self.critic_target.load_state_dict(c2['critic_target_state_dict'])
