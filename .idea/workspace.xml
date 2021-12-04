@@ -2,36 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding steps file">
-      <change beforePath="$PROJECT_DIR$/Ant/Good/avg_reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/avg_reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/avg_uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/avg_uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_1/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_1/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_1/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_1/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_2/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_2/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_2/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_3/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_3/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Good/seed_3/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/avg_reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/avg_reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/avg_uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/avg_uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_1/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_2/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Ant/Medium/seed_3/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Good/avg_reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/avg_reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Good/avg_uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/avg_uncertainity.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_1/args.json" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_1/args.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_1/reward.npy" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_1/reward.npy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_1/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_1/reward.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_1/uncertainity.npy" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_1/uncertainity.npy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_1/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_1/uncertainity.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_2/args.json" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_2/args.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_2/reward.npy" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_2/reward.npy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_2/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_2/reward.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_2/uncertainity.npy" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_2/uncertainity.npy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_2/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_2/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_3/reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Good/seed_3/uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Medium/avg_reward.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Medium/avg_reward.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hopper/Medium/avg_uncertainity.png" beforeDir="false" afterPath="$PROJECT_DIR$/Hopper/Medium/avg_uncertainity.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/continous_action/main_safe.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/continous_action/main_safe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/args.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/reward.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/uncertainity.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hopper/Good/seed_3/uncertainity.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/code/continous_action/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/continous_action/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/continous_action/sac_safe.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/continous_action/sac_safe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/discrete_action/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/plot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
