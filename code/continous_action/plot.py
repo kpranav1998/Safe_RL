@@ -4,14 +4,25 @@ import os
 import numpy as np
 import numpy.ma as ma
 from itertools import zip_longest
+import seaborn as sns
+sns.set()
+sns.color_palette("bright", 10)
 
-GAME_NAME = "Hopper"
+episode = 100
+GAME_NAME = "Ant"
 LOAD_PATH = "../../"+str(GAME_NAME)+"/Good"
+BASE_LOAD_PATH = "../../"+str(GAME_NAME)+"/Normal"
 
 folders = os.listdir(LOAD_PATH)
 
+base_folders = os.listdir(BASE_LOAD_PATH)
+print(base_folders)
+base_rewards = []
+base_steps = []
+steps = []
+rewards = []
 
-BASELINE_VALUE  =  2300
+BASELINE_VALUE  =  5100
 def average_plot(l,margin=100):
     avg_list = []
     for i in range(l.shape[0] - margin):
@@ -24,105 +35,112 @@ def average_plot(l,margin=100):
     return avg_list
 
 
-steps = []
-
 uncertainities = []
 
+length = int(1e9)
+for folder in base_folders:
+    if(".png" not in folder and ".npy" not in folder):
+        path = os.path.join(BASE_LOAD_PATH,folder)
+        print(path)
+        base_reward = np.load(os.path.join(path,"reward.npy"))
+        if(base_reward.shape[0] < length):
+            length = base_reward.shape[0]
+        base_rewards.append(base_reward)
+
+
+base_arr = np.array([base_rewards[0][0:length],base_rewards[1][0:length],base_rewards[2][0:length]])#,base_rewards[2][0:length]])
+base_avg_reward = np.nanmean(np.array(list(zip_longest(*base_arr)),dtype=float),axis=1)
+base_std_reward = np.nanstd(np.array(list(zip_longest(*base_arr)),dtype=float),axis=1)
+
+i = 0
+while(i < int(1.5e6)):
+    i += int(1.5e6)/length
+    base_steps.append(i)
+    i = i + 1
+
+
+
+
+
 for folder in folders:
-
-    if (".png" not in folder):
-        seed_step = []
-        j = 0
-        path = os.path.join(LOAD_PATH,folder)
-        uncertainity = np.load(os.path.join(path,"uncertainity.npy"),allow_pickle=True)
-        uncertainity = np.asarray(uncertainity)
-        main_list = []
-        print(j+1)
-        for i in range(len(uncertainity)):
-            j += len(uncertainity[i])
-            seed_step.append(j)
-            uncertainity[i] = np.asarray(uncertainity[i])
-            main_list.extend(uncertainity[i])
-        main_list = average_plot(np.asarray(main_list),200)
-        plt.figure()
-        plt.ylabel('uncertainity')
-        plt.plot(main_list, 'b')  # uncertainity_1
-        # plt.plot(base_uncertainity, 'r') # uncertainity_2
-        # plt.legend(["Average performance of agent with help of baseline","Normal Agent"], loc ="best")
-        plt.legend(["Uncertainity"], loc="best")
-
-        plt.savefig(os.path.join(path, "uncertainity.png"))
-        plt.close()
-        steps.append(seed_step)
-        uncertainities.append(main_list)
-
-base_reward = np.load("../../"+str(GAME_NAME)+"/Normal/reward.npy")
-base_steps = []
-base_uncertainity = np.load("../../"+str(GAME_NAME)+"/Normal/uncertainity.npy",allow_pickle=True)
-j = 0
-for i in range(len(base_uncertainity)):
-    j += len(base_uncertainity[i])
-    base_steps.append(j)
-    base_uncertainity[i] = np.asarray(base_uncertainity[i])
-
-
-base_reward = average_plot(base_reward,200)
-h2 = min(base_reward.shape[0], len(base_steps))
-j = 0
-rewards = []
-index = 0
-l = 0
-for folder in folders:
-    if(".png" not in folder):
+    if(".png" not in folder and ".npy" not in folder):
         path = os.path.join(LOAD_PATH,folder)
         reward = np.load(os.path.join(path,"reward.npy"))
-        reward = average_plot(reward,margin=200)
+
         rewards.append(reward)
-        h1 = min(reward.shape[0],len(steps[j]))
-        if(reward.shape[0] > l ):
-            l = reward.shape[0]
-            index = j
-        plt.figure()
-        plt.ylabel('reward')
-        plt.plot(steps[j][0:h1],reward,color = 'b')
-        plt.plot(base_steps[0:h2],base_reward,color = 'r')
-        plt.axhline(y=BASELINE_VALUE, color='y', linestyle='-')  ## baseline
-        plt.legend(["Agent with help from Baseline ","Normal Agent","Baseline Value"], loc ="best")
-        plt.savefig(os.path.join(path,"reward.png"))
-        plt.close()
-        j = j + 1
+
+        uncertainity = np.load(os.path.join(path,"uncertainity.npy"),allow_pickle=True)
+        u = []
+        for row in uncertainity:
+            row = np.asarray(row)
+            u.append(np.mean(row))
+        u = np.asarray(u)
+        uncertainities.append(u)
+
+
+
+
+length_safe = min(len(rewards[0]),len(rewards[1]),len(rewards[2]))
+arr = np.array([rewards[0][0:length_safe],rewards[1][0:length_safe],rewards[2][0:length_safe]])
 
 rewards = np.asarray(rewards)
-avg_reward = np.nanmean(np.array(list(zip_longest(*rewards)),dtype=float),axis=1)
-std_reward = np.nanstd(np.array(list(zip_longest(*rewards)),dtype=float),axis=1)
+avg_reward = np.nanmean(np.array(list(zip_longest(*arr)),dtype=float),axis=1)
+std_reward = np.nanstd(np.array(list(zip_longest(*arr)),dtype=float),axis=1)
 
-h = min(rewards[index].shape[0],len(steps[index]))
+avg_reward = average_plot(avg_reward,episode)
+base_avg_reward = average_plot(base_avg_reward,episode)
 
-plt.figure()
+
+
+i = 0
+while(i < int(1.5e6)):
+    i += int(1.5e6)/length_safe
+    steps.append(i)
+    i = i + 1
+
+
+x = min(avg_reward.shape[0],len(steps))
+y = min(base_avg_reward.shape[0],len(base_steps))
+
+
+
+a =x
+b = y
+y = int(y * 0.95)
+
+x = int(x * 0.95)
+plt.xlabel('steps')
 plt.ylabel('reward')
-plt.plot(steps[index][0:h], avg_reward, color='b')
-plt.fill_between(steps[index][0:h], avg_reward+std_reward, avg_reward - std_reward, alpha=.5)
 
-plt.plot(base_steps[0:h2],base_reward, 'r') # reward_2
-plt.axhline(y=BASELINE_VALUE, color='y', linestyle='-')  ## baseline
-plt.legend(["Agent with baseline","Normal Agent","Baseline Value"], loc ="best")
+plt.plot(steps[0:x], avg_reward[0:x], color='b',lw=3)
+plt.fill_between(steps[0:x], avg_reward[0:x] + std_reward[0:x], avg_reward[0:x] -std_reward[0:x], alpha=0.2,color='b')
+
+plt.plot(base_steps[0:y],base_avg_reward[0:y], 'r',lw=3) # reward_2
+plt.fill_between(base_steps[0:y], base_avg_reward[0:y] + base_std_reward[0:y], base_avg_reward[0:y] - base_std_reward[0:y], alpha= 0.2,color='r')
+
+plt.axhline(y=BASELINE_VALUE, color='y', linestyle='-',lw=3)  ## baseline
+#plt.legend(["Agent with baseline","Normal Agent","Baseline Value"], loc ="best")
 plt.savefig(os.path.join(LOAD_PATH,"avg_reward.png"))
-plt.close()
+plt.show()
 
 
 
+x = a
 
+y = b
 uncertainities = np.asarray(uncertainities)
+print(uncertainities.shape)
 avg_uncertainity = np.nanmean(np.array(list(zip_longest(*uncertainities)),dtype=float),axis=1)
 plt.figure()
+plt.xlabel('steps')
 plt.ylabel('uncertainity')
-plt.plot(avg_uncertainity, 'b') # uncertainity_1
-plt.legend(["Uncertainity"], loc="best")
+plt.plot(steps[0:x],avg_uncertainity[0:x], 'b') # uncertainity_1
+#plt.legend(["Uncertainity"], loc="best")
 
 plt.savefig(os.path.join(LOAD_PATH,"avg_uncertainity.png"))
 plt.close()
 
 
 ## Hopper Medium = 1700
-## Hopper Good = 2300
+## Hopper Good =
 ## Ant good = 5100

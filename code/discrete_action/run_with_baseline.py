@@ -31,7 +31,7 @@ uncertainity_save = []
 safe_uncertainity_save = []
 Q = []
 safe_Q = []
-#LCB_diff = []
+LCB_diff = []
 
 
 def average_plot(list, save_path, y_label, margin=50):
@@ -233,6 +233,22 @@ class ActionGetter:
 
             return 0, action, UNCERTAINITY, None, None, None
 
+        elif(step_number < self.replay_memory_start_size):
+            safe_vals = safe_net(state, None)
+
+            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            data = Counter(acts)
+            safe_action = data.most_common(1)[0][0]
+
+            safe_vals = torch.cat(safe_vals, 0)
+            safe_mean_val = torch.mean(safe_vals, axis=0)
+            safe_std_val = torch.std(safe_vals, axis=0)
+            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
+            safe_LCB = torch.max(safe_LCB).item()
+            return 0, safe_action, UNCERTAINITY, 0,safe_LCB, -safe_LCB
+
+
+
 
 
 
@@ -241,23 +257,21 @@ class ActionGetter:
             vals = policy_net(state, active_head)
 
         if active_head is not None:
-            action = torch.argmax(vals, dim=1).item()
-
             vals = policy_net(state, None)
-
+            acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            data = Counter(acts)
+            action = data.most_common(1)[0][0]
             vals = torch.cat(vals, 0)
-
             mean_val = torch.mean(vals, axis=0)
             std_val = torch.std(vals, axis=0)
             LCB = mean_val - info["LCB_constant"] * std_val
             LCB = torch.max(LCB).item()
 
             safe_vals = safe_net(state, None)
+            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            data = Counter(acts)
+            safe_action = data.most_common(1)[0][0]
             safe_vals = torch.cat(safe_vals, 0)
-            safe_acts = torch.argmax(safe_vals, dim=1)
-            data = Counter(safe_acts)
-            safe_action = data.most_common(1)[0][0].item()
-
             safe_mean_val = torch.mean(safe_vals, axis=0)
             safe_std_val = torch.std(safe_vals, axis=0)
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
@@ -269,40 +283,30 @@ class ActionGetter:
 
             return eps, action, UNCERTAINITY, LCB, safe_LCB, (safe_LCB - LCB)
         else:
-            # vote
-            vals = torch.cat(vals, 0)
-
-            acts = torch.argmax(vals, dim=1)
+            vals = policy_net(state, None)
+            acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
             data = Counter(acts)
-            action = data.most_common(1)[0][0].item()
-
-            #### SAFE ####
+            action = data.most_common(1)[0][0]
+            vals = torch.cat(vals, 0)
             mean_val = torch.mean(vals, axis=0)
             std_val = torch.std(vals, axis=0)
             LCB = mean_val - info["LCB_constant"] * std_val
             LCB = torch.max(LCB).item()
 
-            safe_vals = safe_net(state, None)
-            safe_vals = torch.cat(safe_vals, 0)
-            safe_acts = torch.argmax(safe_vals, dim=1)
-            data = Counter(safe_acts)
-            safe_action = data.most_common(1)[0][0].item()
 
+            safe_vals = safe_net(state, None)
+            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            data = Counter(acts)
+            safe_action = data.most_common(1)[0][0]
+            safe_vals = torch.cat(safe_vals, 0)
             safe_mean_val = torch.mean(safe_vals, axis=0)
             safe_std_val = torch.std(safe_vals, axis=0)
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
             safe_LCB = torch.max(safe_LCB).item()
 
             if (LCB < safe_LCB):
-                action = safe_action
-
-            UNCERTAINITY = True
-            '''
-                    except:
-                        print("error in LCB")
-            '''
-                #### SAFE ####
-
+               action = safe_action
+               UNCERTAINITY = True
             return eps, action, UNCERTAINITY, LCB, safe_LCB, (safe_LCB - LCB)
 
 
@@ -404,7 +408,7 @@ def train(step_number, last_save):
 
             episode_LCB = []
             episode_safe_LCB = []
-            #episode_LCB_diff = []
+            episode_LCB_diff = []
             episode_loss = []
             while not terminal:
                 if life_lost:
@@ -418,7 +422,7 @@ def train(step_number, last_save):
 
                     episode_LCB.append(q)
                     episode_safe_LCB.append(s_q)
-                    #episode_LCB_diff.append(lcb_diff)
+                    episode_LCB_diff.append(lcb_diff)
 
 
                 ep_eps_list.append(eps)
@@ -454,7 +458,7 @@ def train(step_number, last_save):
                     print('updating target network at %s' % step_number)
                     target_net.load_state_dict(policy_net.state_dict())
                     average_plot(uncertainity_save, os.path.join(model_base_filedir, 'uncertainity'), 'uncertainity')
-                    #average_plot(LCB_diff, os.path.join(model_base_filedir, 'LCB_difference'), 'LCB_difference')
+                    average_plot(LCB_diff, os.path.join(model_base_filedir, 'LCB_difference'), 'LCB_difference')
                     average_plot(Q, os.path.join(model_base_filedir, 'Q'), 'Q')
                     average_plot(safe_Q, os.path.join(model_base_filedir, 'safe_Q'), 'safe_Q')
                     average_plot(episode_steps_list, os.path.join(model_base_filedir, 'episode_steps'), 'episode_steps')
@@ -476,7 +480,7 @@ def train(step_number, last_save):
                 reward_save.append(episode_reward_sum)
                 Q.append(np.mean(episode_LCB))
                 safe_Q.append(np.mean(episode_safe_LCB))
-                #LCB_diff.append(np.mean(episode_LCB_diff))
+                LCB_diff.append(np.mean(episode_LCB_diff))
                 episode_steps_list.append(episode_steps)
 
             et = time.time()
@@ -563,9 +567,10 @@ def baseline_evaluate():
     frames_for_gif = []
     results_for_eval = []
     # only run one
-    for i in range(30):
-        np.random.seed(random.randint(1,100000))
-        torch.manual_seed(random.randint(1,100000))
+    for i in range(10):
+        seed = random.randint(1,100000)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
         evaluate_step_number = 0
         state = env.reset()
         episode_reward_sum = 0
@@ -611,7 +616,7 @@ if __name__ == '__main__':
     else:
         device = 'cpu'
     print("running on %s" % device)
-    LCB_constant = 1
+    LCB_constant = 0.1
 
     Threshold = 1000
 
@@ -626,10 +631,9 @@ if __name__ == '__main__':
         "PRIOR_SCALE": 3,  # what to scale prior by
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
-        "BERNOULLI_PROBABILITY": 0.9,
-        # Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 100000,  # how often to update target network
-        "MIN_HISTORY_TO_LEARN": 100000,  # in environment frames
+        "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
+        "TARGET_UPDATE": 90000,  # how often to update target network
+        "MIN_HISTORY_TO_LEARN": 500,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
@@ -653,12 +657,12 @@ if __name__ == '__main__':
         "BATCH_SIZE": 64,  # Batch size to use for learning
         "GAMMA": .99,  # Gamma weight in Q update
         "PLOT_EVERY_EPISODES": 5,
-        "CLIP_GRAD": 5,  # Gradient clipping setting
+        "CLIP_GRAD": 10,  # Gradient clipping setting
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(50e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(25e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -666,7 +670,7 @@ if __name__ == '__main__':
         "THRESHOLD": Threshold,
         "LCB_constant": LCB_constant,
         "Safety_step_number": 0,
-        "Baseline_Value": 5000
+        "Baseline_Value": 248
 
     }
 
@@ -809,8 +813,9 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    #train(start_step_number, start_last_save)
     baseline_evaluate()
+
+    #train(start_step_number, start_last_save)
     # evaluate(0)
 
     ## pong_rpf_0001406541q = -4
@@ -829,3 +834,5 @@ if __name__ == '__main__':
     ## qbert_rpf_0009623049q = 10975
     ## qbert_rpf_0007017170q = 7300
     ## qbert_rpf_0005412569q = 5000
+
+    ##breakout_rpf_0002001346q.pkl = 310,248,299

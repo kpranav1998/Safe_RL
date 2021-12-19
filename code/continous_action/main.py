@@ -22,8 +22,7 @@ parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
 parser.add_argument('--safe_path',type=str,default="/home/deep8/pranav/Safe_RL_Technion/pytorch-soft-actor-critic/results/HalfCheetah-v2_0/model_10005.67001717289.pkl",
                     help='path to baseline')
-parser.add_argument('--baseline_performance', help='Give value of baseline')
-parser.add_argument('--n_ensemble', default=3,type=int,
+parser.add_argument('--n_ensemble', default=1,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
                     help='Policy Type: Gaussian | Deterministic (default: Gaussian)')
@@ -44,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(10e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(1.5e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
