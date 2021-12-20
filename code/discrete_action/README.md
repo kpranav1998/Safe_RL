@@ -9,7 +9,7 @@ The file run_with_baseline.py is used to run an ensemble of RL agents within the
 
 To run an normal ensemble of SAC agents with the Safe RL framework use the following code
 ```bash
-python3 run_with_baseline.py --alpha 0.2
+python3 run_with_baseline.py
 ```
 To run an normal ensemble of SAC agents use the following code
 ```bash
