@@ -9,8 +9,8 @@ sns.set()
 sns.color_palette("bright", 10)
 
 episode = 100
-GAME_NAME = "Breakout"
-LOAD_PATH = "../../"+str(GAME_NAME)+"/Good_264"
+GAME_NAME = "Freeway"
+LOAD_PATH = "../../"+str(GAME_NAME)+"/Medium_15"
 BASE_LOAD_PATH = "../../"+str(GAME_NAME)+"/Normal_DQN"
 
 folders = os.listdir(LOAD_PATH)
@@ -19,7 +19,7 @@ base_folders = os.listdir(BASE_LOAD_PATH)
 print(base_folders)
 base_rewards = []
 base_steps = []
-BASELINE_VALUE  =  264
+BASELINE_VALUE  =  16
 def average_plot(l,margin=100):
     avg_list = []
     for i in range(l.shape[0] - margin):
@@ -94,8 +94,8 @@ base_avg_reward = average_plot(base_avg_reward,episode)
 net_steps = []
 
 i = 0
-while (i < int(6.2e6)):
-            i += int(6.2e6) / avg_reward.shape[0]
+while (i < int(1.75e7)):
+            i += int(1.75e7) / avg_reward.shape[0]
             net_steps.append(i)
             i = i + 1
 
@@ -103,8 +103,11 @@ x = min(avg_reward.shape[0],len(net_steps))
 y = min(base_avg_reward.shape[0],len(base_steps))
 
 a =x
-x = int(x * 0.95)
-plt.ylim(0,600)
+b = y
+#x = int(x * 0.40)
+#y = int(y * 0.80)
+
+#plt.ylim(0,600)
 plt.xlabel('steps')
 plt.ylabel('reward')
 
@@ -122,6 +125,7 @@ plt.show()
 
 
 x = a
+y = b
 uncertainities = np.asarray(uncertainities)
 avg_uncertainity = np.nanmean(np.array(list(zip_longest(*uncertainities)),dtype=float),axis=1)
 plt.figure()
