@@ -23,7 +23,7 @@ steps = []
 rewards = []
 
 BASELINE_VALUE  =  5100
-'''
+
 def average_plot(l,margin=100):
     avg_list = []
     for i in range(l.shape[0] - margin):
@@ -35,7 +35,7 @@ def average_plot(l,margin=100):
     avg_list = np.asarray(avg_list, dtype=np.float32)
     return avg_list
 
-
+'''
 uncertainities = []
 
 length = int(1e9)
@@ -62,7 +62,7 @@ while(i < int(1.5e6)):
 
 
 
-for folder in folders:
+for folder in ["seed_1"]:
     if(".png" not in folder and ".npy" not in folder):
         path = os.path.join(BASE_LOAD_PATH,folder)
         reward = np.load(os.path.join(path,"reward.npy"))
@@ -73,13 +73,17 @@ for folder in folders:
         uncertainity = np.load(os.path.join(path,"uncertainity.npy"),allow_pickle=True)
         u = []
         seed_step = []
+        i = 0
         for row in uncertainity:
             row = np.asarray(row)
             total_steps += row.shape[0]
-            print(total_steps)
+            print(total_steps,row.shape[0],reward[i])
+            i = i + 1
             seed_step.append(total_steps)
             u.append(np.mean(row))
         seed_step = np.asarray(seed_step)
+        plt.plot(average_plot(seed_step,100),average_plot(reward,100))
+        plt.show()
         np.save(os.path.join(path,"steps.npy"),seed_step)
         '''u = np.asarray(u)
         uncertainities.append(u)'''
