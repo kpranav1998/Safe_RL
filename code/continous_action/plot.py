@@ -23,6 +23,7 @@ steps = []
 rewards = []
 
 BASELINE_VALUE  =  5100
+'''
 def average_plot(l,margin=100):
     avg_list = []
     for i in range(l.shape[0] - margin):
@@ -57,8 +58,7 @@ while(i < int(1.5e6)):
     i += int(1.5e6)/length
     base_steps.append(i)
     i = i + 1
-
-
+'''
 
 
 
@@ -66,20 +66,27 @@ for folder in folders:
     if(".png" not in folder and ".npy" not in folder):
         path = os.path.join(LOAD_PATH,folder)
         reward = np.load(os.path.join(path,"reward.npy"))
+        total_steps = 0
 
         rewards.append(reward)
 
         uncertainity = np.load(os.path.join(path,"uncertainity.npy"),allow_pickle=True)
         u = []
+        seed_step = []
         for row in uncertainity:
             row = np.asarray(row)
+            total_steps += row.shape[0]
+            print(total_steps)
+            seed_step.append(total_steps)
             u.append(np.mean(row))
-        u = np.asarray(u)
-        uncertainities.append(u)
+        seed_step = np.asarray(seed_step)
+        np.save(os.path.join(path,"steps.npy"),seed_step)
+        '''u = np.asarray(u)
+        uncertainities.append(u)'''
 
 
 
-
+'''
 length_safe = min(len(rewards[0]),len(rewards[1]),len(rewards[2]))
 arr = np.array([rewards[0][0:length_safe],rewards[1][0:length_safe],rewards[2][0:length_safe]])
 
@@ -144,3 +151,4 @@ plt.close()
 ## Hopper Medium = 1700
 ## Hopper Good =
 ## Ant good = 5100
+'''

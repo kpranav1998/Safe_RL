@@ -20,7 +20,7 @@ parser.add_argument('--env-name', default="Hopper-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/model_2806.139761915278.pkl")
+parser.add_argument('--safe_path',type=str,default="./results/Hopper-v2_2/model_2806.139761915278.pkl")
 parser.add_argument('--baseline_performance',default=2300, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -100,7 +100,7 @@ uncertainity_list = np.load("./results/Hopper-v2_safe_4/uncertainity.npy",allow_
 
 reward_list = []
 uncertainity_list = []
-
+steps = []
 
 
 
@@ -192,8 +192,12 @@ for i_episode in itertools.count(1):
         break
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
+    steps.append(total_numsteps)
+    print(steps[len(steps)])
     np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
     np.save(os.path.join(model_base_filedir,'reward.npy'), reward_list)
+    np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
+
     writer.add_scalar('reward/train', episode_reward, i_episode)
     print("Episode: {}, total numsteps: {}, episode steps: {}, reward: {}".format(i_episode, total_numsteps, episode_steps, round(episode_reward, 2)))
 
@@ -226,4 +230,3 @@ for i_episode in itertools.count(1):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()
-

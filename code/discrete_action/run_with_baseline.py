@@ -224,14 +224,33 @@ class ActionGetter:
             return 0, action, UNCERTAINITY, None, None, None
 
         elif (baseline_evaluation == True):
-            vals = safe_net(state, None)
+            '''safe_vals = safe_net(state, None)
 
-            acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
             data = Counter(acts)
             action = data.most_common(1)[0][0]
             UNCERTAINITY = True
 
-            return 0, action, UNCERTAINITY, None, None, None
+            vals = policy_net(state, None)
+            vals = torch.cat(vals, 0)
+            mean_val = torch.mean(vals, axis=0)
+            std_val = torch.std(vals, axis=0)
+            LCB = mean_val - info["LCB_constant"] * std_val
+            action = torch.argmax(LCB).item()
+            LCB_value = torch.max(LCB).item()'''
+
+            safe_vals = safe_net(state, None)
+            safe_vals = torch.cat(safe_vals, 0)
+            safe_mean_val = torch.mean(safe_vals, axis=0)
+            safe_std_val = torch.std(safe_vals, axis=0)
+            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
+            safe_action = torch.argmax(safe_LCB).item()
+            safe_LCB_value = torch.max(safe_LCB).item()
+
+
+
+
+            return 0, safe_action, UNCERTAINITY, None, None, None
 
         elif(step_number < self.replay_memory_start_size):
             safe_vals = safe_net(state, None)
@@ -239,75 +258,30 @@ class ActionGetter:
             acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
             data = Counter(acts)
             safe_action = data.most_common(1)[0][0]
-
-            safe_vals = torch.cat(safe_vals, 0)
-            safe_mean_val = torch.mean(safe_vals, axis=0)
-            safe_std_val = torch.std(safe_vals, axis=0)
-            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
-            safe_LCB = torch.max(safe_LCB).item()
-            return 0, safe_action, UNCERTAINITY, 0,safe_LCB, -safe_LCB
+            return 0, safe_action, UNCERTAINITY, 0,0,0
 
 
+        vals = policy_net(state, None)
+        vals = torch.cat(vals, 0)
+        mean_val = torch.mean(vals, axis=0)
+        std_val = torch.std(vals, axis=0)
+        LCB = mean_val - info["LCB_constant"] * std_val
+        action = torch.argmax(LCB).item()
+        LCB_value = torch.max(LCB).item()
 
 
-
-
-        else:
-
-            vals = policy_net(state, active_head)
-
-        if active_head is not None:
-            vals = policy_net(state, None)
-            acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            action = data.most_common(1)[0][0]
-            vals = torch.cat(vals, 0)
-            mean_val = torch.mean(vals, axis=0)
-            std_val = torch.std(vals, axis=0)
-            LCB = mean_val - info["LCB_constant"] * std_val
-            LCB = torch.max(LCB).item()
-
-            safe_vals = safe_net(state, None)
-            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            safe_action = data.most_common(1)[0][0]
-            safe_vals = torch.cat(safe_vals, 0)
-            safe_mean_val = torch.mean(safe_vals, axis=0)
-            safe_std_val = torch.std(safe_vals, axis=0)
-            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
-            safe_LCB = torch.max(safe_LCB).item()
-
-            if (LCB < safe_LCB):
+        safe_vals = safe_net(state, None)
+        safe_vals = torch.cat(safe_vals, 0)
+        safe_mean_val = torch.mean(safe_vals, axis=0)
+        safe_std_val = torch.std(safe_vals, axis=0)
+        safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
+        safe_action = torch.argmax(safe_LCB).item()
+        safe_LCB_value = torch.max(safe_LCB).item()
+        if (LCB_value < safe_LCB_value):
                action = safe_action
                UNCERTAINITY = True
 
-            return eps, action, UNCERTAINITY, LCB, safe_LCB, (safe_LCB - LCB)
-        else:
-            vals = policy_net(state, None)
-            acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            action = data.most_common(1)[0][0]
-            vals = torch.cat(vals, 0)
-            mean_val = torch.mean(vals, axis=0)
-            std_val = torch.std(vals, axis=0)
-            LCB = mean_val - info["LCB_constant"] * std_val
-            LCB = torch.max(LCB).item()
-
-
-            safe_vals = safe_net(state, None)
-            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            safe_action = data.most_common(1)[0][0]
-            safe_vals = torch.cat(safe_vals, 0)
-            safe_mean_val = torch.mean(safe_vals, axis=0)
-            safe_std_val = torch.std(safe_vals, axis=0)
-            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
-            safe_LCB = torch.max(safe_LCB).item()
-
-            if (LCB < safe_LCB):
-               action = safe_action
-               UNCERTAINITY = True
-            return eps, action, UNCERTAINITY, LCB, safe_LCB, (safe_LCB - LCB)
+        return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
 
 
 def get_uncertainity(states):
@@ -387,6 +361,7 @@ def train(step_number, last_save):
         ####### Training #######
         ########################
         epoch_frame = 0
+        steps = 0
 
         while epoch_frame < info['EVAL_FREQUENCY']:
             terminal = False
@@ -399,6 +374,7 @@ def train(step_number, last_save):
             epoch_num += 1
             ep_eps_list = []
             ptloss_list = []
+
 
             episode_reward_sum = 0
             episode_steps = 0
@@ -419,7 +395,6 @@ def train(step_number, last_save):
                                                                                                    state=state,
                                                                                                    active_head=None,
                                                                                                    )
-
                     episode_LCB.append(q)
                     episode_safe_LCB.append(s_q)
                     episode_LCB_diff.append(lcb_diff)
@@ -474,6 +449,7 @@ def train(step_number, last_save):
                     np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
 
             if (step_number > info["MIN_HISTORY_TO_LEARN"]):
+                steps_save.append(step_number)
                 uncertainity_save.append(np.mean(episode_uncertainity))
                 safe_uncertainity_save.append(np.mean(safe_episode_uncertainity))
                 loss_save.append(np.mean(episode_loss))
@@ -483,6 +459,7 @@ def train(step_number, last_save):
                 LCB_diff.append(np.mean(episode_LCB_diff))
                 episode_steps_list.append(episode_steps)
 
+            print(episode_reward_sum)
             et = time.time()
             ep_time = et - st
             perf['steps'].append(step_number)
@@ -606,7 +583,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/pong_7.pkl',
+                        default='./results/baseline_good',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -616,15 +593,14 @@ if __name__ == '__main__':
     else:
         device = 'cpu'
     print("running on %s" % device)
-    LCB_constant = 0.1
+    LCB_constant = 1
 
-    Threshold = 1000
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/pong.bin',  # gym prefix
+        "GAME": 'roms/breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'pong_rpf_safe',  # start files with name
+        "NAME": 'breakout_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -632,7 +608,7 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 90000,  # how often to update target network
+        "TARGET_UPDATE": 60000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 500,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
@@ -644,8 +620,8 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": 250000,  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(5e6),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": 50000,  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
         "RMS_DECAY": 0.95,
@@ -662,15 +638,14 @@ if __name__ == '__main__':
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(25e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(20e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
         "DEAD_AS_END": True,  # do you send finished=true to agent while training when it loses a life
-        "THRESHOLD": Threshold,
         "LCB_constant": LCB_constant,
         "Safety_step_number": 0,
-        "Baseline_Value": 248
+        "Baseline_Value": 15
 
     }
 
@@ -813,9 +788,9 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    baseline_evaluate()
+    #baseline_evaluate()
 
-    #train(start_step_number, start_last_save)
+    train(start_step_number, start_last_save)
     # evaluate(0)
 
     ## pong_rpf_0001406541q = -4
