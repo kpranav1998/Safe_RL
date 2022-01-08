@@ -9,8 +9,8 @@ sns.set()
 sns.color_palette("bright", 10)
 
 episode = 100
-GAME_NAME = "Ant"
-LOAD_PATH = "../../"+str(GAME_NAME)+"/Good"
+GAME_NAME = "Hopper"
+LOAD_PATH = "../../"+str(GAME_NAME)+"/Medium"
 BASE_LOAD_PATH = "../../"+str(GAME_NAME)+"/Normal"
 
 folders = os.listdir(LOAD_PATH)
@@ -64,7 +64,7 @@ while(i < int(1.5e6)):
 
 for folder in folders:
     if(".png" not in folder and ".npy" not in folder):
-        path = os.path.join(LOAD_PATH,folder)
+        path = os.path.join(BASE_LOAD_PATH,folder)
         reward = np.load(os.path.join(path,"reward.npy"))
         total_steps = 0
 
