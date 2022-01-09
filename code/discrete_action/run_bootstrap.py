@@ -25,6 +25,7 @@ import config
 uncertainity_save = []
 reward_save = []
 loss_save = []
+steps = []
 
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
