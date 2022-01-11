@@ -26,6 +26,7 @@ uncertainity_save = []
 reward_save = []
 loss_save = []
 steps = []
+steps2 = []
 
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
@@ -106,7 +107,7 @@ def handle_checkpoint(last_save, cnt):
                  }
         filename = os.path.abspath(model_base_filepath + "_%010dq.pkl" % cnt)
         buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
-        replay_memory.save_buffer(buff_filename)
+        #replay_memory.save_buffer(buff_filename)
         print("Saved Buffer")
         save_checkpoint(state, filename)
         # npz will be added
@@ -254,6 +255,8 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
 def train(step_number, last_save):
     """Contains the training and evaluation loops"""
     epoch_num = len(perf['steps'])
+    total_steps = 0
+
     while step_number < info['MAX_STEPS']:
         ########################
         ####### Training #######
@@ -270,11 +273,10 @@ def train(step_number, last_save):
             epoch_num += 1
             ep_eps_list = []
             ptloss_list = []
-
             episode_reward_sum = 0
             episode_uncertainity = []
             episode_loss = []
-
+            episode_steps = 0
             while not terminal:
                 if life_lost:
                     action = 1
@@ -293,6 +295,7 @@ def train(step_number, last_save):
                 epoch_frame += 1
                 episode_reward_sum += reward
                 state = next_state
+                total_steps += 1
 
                 if step_number % info['LEARN_EVERY_STEPS'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
                     _states, _actions, _rewards, _next_states, _terminal_flags, _masks = replay_memory.get_minibatch(
@@ -312,7 +315,11 @@ def train(step_number, last_save):
                     print("Saved at: ", os.path.join(model_base_filedir, 'uncertainity.npy'))
                     np.save(os.path.join(model_base_filedir, 'uncertainity.npy'), uncertainity_save)
                     np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
+                    np.save(os.path.join(model_base_filedir, 'steps.npy'), steps)
+                    np.save(os.path.join(model_base_filedir, 'steps2.npy'), steps2)
 
+            steps.append(total_steps)
+            steps2.append(step_number)
             uncertainity_save.append(np.mean(episode_uncertainity))
             loss_save.append(np.mean(episode_loss))
             reward_save.append(episode_reward_sum)
@@ -405,10 +412,10 @@ if __name__ == '__main__':
     print("running on %s" % device)
 
     info = {
-        "GAME":'roms/breakout.bin', # gym prefix
+        "GAME":'roms/pong.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'breakout_rpf',  # start files with name
+        "NAME": 'pong_rpf',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -428,7 +435,7 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(2.5e5),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e5),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
@@ -446,7 +453,7 @@ if __name__ == '__main__':
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(18e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(5e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode

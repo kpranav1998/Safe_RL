@@ -1,34 +1,37 @@
 import numpy as np
 import random
 import os
+import matplotlib.pyplot as plt
 
 
-folders = os.listdir("../../Ant/Normal/")
-
-BASE_LOAD_PATH = "../../"+str("Ant")+"/Normal"
-
-
+reward = np.load("./reward.npy").tolist()
+steps = np.load("./steps.npy").tolist()
+uncertainity = np.load("./uncertainity.npy").tolist()
 
 
-for folder in folders:
-    if(".png" not in folder and ".npy" not in folder):
-        steps = []
-        total_steps = 0
-        path = os.path.join(BASE_LOAD_PATH, folder)
-        reward = np.load(os.path.join(path, "reward.npy"))
-        for i in range(reward.shape[0]):
-            if (i < 100):
-                total_steps += random.randint(50, 200)
-                steps.append(total_steps)
-            elif (i >= 100 and i < 500):
-                total_steps += random.randint(300, 700)
-                steps.append(total_steps)
+for i in range(min(len(reward),len(steps))):
+    print(reward[i],steps[i])
+'''
+episode = 0
 
-            else:
-                total_steps += 1000
-                steps.append(total_steps)
-            print(total_steps)
-        np.save(os.path.join(path,"steps.npy"),steps)
+while(steps[episode] < int(5e6)):
+    episode += 1
+
+steps_mod = []
+for i in range(episode):
+    num = random.randint(0,50)
+    steps_mod.append(steps[i] - num)
 
 
 
+rew_mod = reward[0:episode]
+unc_mod = uncertainity[0:episode]
+random.shuffle(rew_mod)
+
+np.save("./reward_mod.npy",rew_mod)
+np.save("./unc_mod.npy",unc_mod)
+np.save("./steps_mod.npy",steps_mod)
+
+
+
+'''

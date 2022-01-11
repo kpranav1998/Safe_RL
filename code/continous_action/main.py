@@ -22,7 +22,7 @@ parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
 parser.add_argument('--safe_path',type=str,default="/home/deep8/pranav/Safe_RL_Technion/pytorch-soft-actor-critic/results/HalfCheetah-v2_0/model_10005.67001717289.pkl",
                     help='path to baseline')
-parser.add_argument('--n_ensemble', default=1,type=int,
+parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
                     help='Policy Type: Gaussian | Deterministic (default: Gaussian)')
@@ -70,7 +70,6 @@ print("starting NEW project: %s" % model_base_filedir)
 json.dump( arg_dict, open( os.path.join(model_base_filedir, "args.json"), 'w' ) )
 
 
-
 # Environment
 # env = NormalizedActions(gym.make(args.env_name))
 env = gym.make(args.env_name)
@@ -92,12 +91,12 @@ memory = ReplayMemory(args.replay_size, args.seed)
 # Training Loop
 total_numsteps = 0
 updates = 0
-
 run_num = 0
 
 
 reward_list = []
 uncertainity_list = []
+steps = []
 
 def average_plot(list,y_label,save_path, margin=3):
     list = np.asarray(list)
@@ -169,7 +168,7 @@ for i_episode in itertools.count(1):
 
         next_state, reward, done, _ = env.step(action) # Step
         episode_steps += 1
-        total_numsteps += 1
+        total_numsteps +=1
         episode_reward += reward
 
         # Ignore the "done" signal if it comes from hitting the time horizon.
@@ -182,10 +181,14 @@ for i_episode in itertools.count(1):
 
     if total_numsteps > args.num_steps:
         break
+    steps.append(total_numsteps)
+    print(total_numsteps)
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
     np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
     np.save(os.path.join(model_base_filedir,'reward.npy'), reward_list)
+    np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
+
     writer.add_scalar('reward/train', episode_reward, i_episode)
     print("Episode: {}, total numsteps: {}, episode steps: {}, reward: {}".format(i_episode, total_numsteps, episode_steps, round(episode_reward, 2)))
 

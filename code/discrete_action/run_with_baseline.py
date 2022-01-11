@@ -20,6 +20,7 @@ from env import Environment
 from replay import ReplayMemory
 import config
 import random
+
 reward_save = []
 loss_save = []
 no_of_calls_to_baseline = []
@@ -221,6 +222,7 @@ class ActionGetter:
             action = data.most_common(1)[0][0]
             UNCERTAINITY = True
 
+
             return 0, action, UNCERTAINITY, None, None, None
 
         elif (baseline_evaluation == True):
@@ -274,9 +276,12 @@ class ActionGetter:
         safe_vals = torch.cat(safe_vals, 0)
         safe_mean_val = torch.mean(safe_vals, axis=0)
         safe_std_val = torch.std(safe_vals, axis=0)
-        safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
+        safe_LCB = safe_mean_val - 0.1 * safe_std_val
         safe_action = torch.argmax(safe_LCB).item()
         safe_LCB_value = torch.max(safe_LCB).item()
+
+        #print(LCB_value,safe_LCB_value)
+
         if (LCB_value < safe_LCB_value):
                action = safe_action
                UNCERTAINITY = True
@@ -356,7 +361,8 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
 def train(step_number, last_save):
     """Contains the training and evaluation loops"""
     epoch_num = len(perf['steps'])
-    while step_number < info['MAX_STEPS']:
+    steps2 = 0
+    while steps2 < info['MAX_STEPS']:
         ########################
         ####### Training #######
         ########################
@@ -413,6 +419,7 @@ def train(step_number, last_save):
                 step_number += 1
                 epoch_frame += 1
                 episode_reward_sum += reward
+                steps2 +=1
                 #print("episode_steps,episode_no_of_uncertainity",episode_steps,episode_no_of_uncertainity)
                 #print("episode_reward_sum: ",episode_reward_sum)
 
@@ -449,7 +456,7 @@ def train(step_number, last_save):
                     np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
 
             if (step_number > info["MIN_HISTORY_TO_LEARN"]):
-                steps_save.append(step_number)
+                steps_save.append(steps2)
                 uncertainity_save.append(np.mean(episode_uncertainity))
                 safe_uncertainity_save.append(np.mean(safe_episode_uncertainity))
                 loss_save.append(np.mean(episode_loss))
@@ -583,7 +590,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/baseline_good',
+                        default='./results/pong_7.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -593,14 +600,14 @@ if __name__ == '__main__':
     else:
         device = 'cpu'
     print("running on %s" % device)
-    LCB_constant = 1
+    LCB_constant = 3
 
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/breakout.bin',  # gym prefix
+        "GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'breakout_safe_v2_',  # start files with name
+        "NAME": 'pong_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -608,8 +615,8 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 60000,  # how often to update target network
-        "MIN_HISTORY_TO_LEARN": 500,  # in environment frames
+        "TARGET_UPDATE": 50000,  # how often to update target network
+        "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
@@ -620,8 +627,8 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(5e6),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": 50000,  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(2.5e5),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": 100000,  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
         "RMS_DECAY": 0.95,
@@ -760,6 +767,7 @@ if __name__ == '__main__':
     safe_model_dict = torch.load(args.safe_model_loadpath)
     safe_model_base_filedir = os.path.split(args.safe_model_loadpath)[0]
     safe_net.load_state_dict(safe_model_dict['policy_net_state_dict'])
+
     #### safe model ####
 
     # create optimizer
@@ -770,6 +778,7 @@ if __name__ == '__main__':
     #                    centered=info["RMS_CENTERED"],
     #                    alpha=info["RMS_DECAY"])
     opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
+
 
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
