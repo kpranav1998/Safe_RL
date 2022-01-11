@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 reward = np.load("./reward.npy").tolist()
 steps = np.load("./steps.npy").tolist()
+print(steps)
 uncertainity = np.load("./uncertainity.npy").tolist()
 
 
