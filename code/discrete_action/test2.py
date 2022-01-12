@@ -36,3 +36,18 @@ np.save("./steps_mod.npy",steps_mod)
 
 
 '''
+
+if self.random_state.rand() < eps:
+    LCB_baseline = np.max(LCB_baseline)
+    safe_action = np.argmax(LCB_baseline)
+else:
+    LCB_baseline = np.max(LCB_baseline)
+    safe_action = np.argmax(LCB_baseline)
+
+LCB_agent = np.max(LCB_agent)
+
+action = np.argmax(LCB_agent)
+if(LCB_agent < LCB_baseline):
+    action = safe_action
+
+

@@ -277,6 +277,10 @@ class ActionGetter:
         safe_mean_val = torch.mean(safe_vals, axis=0)
         safe_std_val = torch.std(safe_vals, axis=0)
         safe_LCB = safe_mean_val - 0.1 * safe_std_val
+
+        safe_LCB =  eps*torch.mean(safe_LCB) + (1 - eps) * torch.max(LCB_baseline)
+        safe_action = torch.argmax(LCB_baseline)
+
         safe_action = torch.argmax(safe_LCB).item()
         safe_LCB_value = torch.max(safe_LCB).item()
 
