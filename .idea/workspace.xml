@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding steps file">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/discrete_action/run_with_baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/run_with_baseline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/discrete_action/test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/test2.py" afterDir="false" />
-    </list>
+    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding steps file" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
