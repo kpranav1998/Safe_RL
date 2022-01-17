@@ -1,7 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding steps file" />
+    <list default="true" id="309a3d3f-ab3b-42ac-8b7a-44b29673e8a3" name="Default Changelist" comment="Adding steps file">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/episode_head.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/episode_relative_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/episode_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/episode_step.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/episode_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/eval_rewards.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/eval_rewards_steps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/pong_rpf_0000000000_info.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/reward.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/steps_avg_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/steps_loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/steps_mean_eps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/steps_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/uncertainity.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_1/uncertainity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/episode_head.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/episode_relative_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/episode_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/episode_step.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/episode_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/eval_rewards.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/eval_rewards_steps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/pong_rpf_0000000000_info.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/reward.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/steps_avg_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/steps_loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/steps_mean_eps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/steps_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/uncertainity.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_2/uncertainity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/episode_head.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/episode_relative_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/episode_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/episode_step.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/episode_times.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/eval_rewards.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/eval_rewards_steps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/pong_rpf_0000000000_info.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/reward.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/steps_avg_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/steps_loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/steps_mean_eps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/steps_reward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/uncertainity.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong/Normal_DQN/seed_3/uncertainity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/discrete_action/run_bootstrap.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/run_bootstrap.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/discrete_action/run_with_baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/run_with_baseline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/discrete_action/test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/discrete_action/test2.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

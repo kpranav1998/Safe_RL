@@ -209,7 +209,6 @@ class ActionGetter:
         '''
 
         state = torch.Tensor(state.astype(np.float) / info['NORM_BY'])[None, :].to(info['DEVICE'])
-        STATUS = None
         UNCERTAINITY = False
 
 
@@ -248,10 +247,6 @@ class ActionGetter:
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
             safe_action = torch.argmax(safe_LCB).item()
             safe_LCB_value = torch.max(safe_LCB).item()
-
-
-
-
             return 0, safe_action, UNCERTAINITY, None, None, None
 
         elif(step_number < self.replay_memory_start_size):
@@ -262,8 +257,24 @@ class ActionGetter:
             safe_action = data.most_common(1)[0][0]
             return 0, safe_action, UNCERTAINITY, 0,0,0
 
-
         vals = policy_net(state, None)
+        vals = torch.cat(vals, 0)
+        mean_val = torch.mean(vals, axis=0)
+        std_val = torch.std(vals, axis=0)
+        LCB = mean_val - info["LCB_constant"] * std_val
+        action = torch.argmax(LCB).item()
+        LCB_value = torch.max(LCB).item()
+
+        safe_vals = safe_net(state, None)
+        safe_vals = torch.cat(safe_vals, 0)
+        safe_mean_val = torch.mean(safe_vals, axis=0)
+        safe_std_val = torch.std(safe_vals, axis=0)
+        safe_LCB = safe_mean_val -info["LCB_constant"]  * safe_std_val
+        safe_action = torch.argmax(safe_LCB).item()
+        safe_LCB_value = torch.max(safe_LCB).item()
+        return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
+
+        '''vals = policy_net(state, None)
         vals = torch.cat(vals, 0)
         mean_val = torch.mean(vals, axis=0)
         std_val = torch.std(vals, axis=0)
@@ -276,21 +287,38 @@ class ActionGetter:
         safe_vals = torch.cat(safe_vals, 0)
         safe_mean_val = torch.mean(safe_vals, axis=0)
         safe_std_val = torch.std(safe_vals, axis=0)
-        safe_LCB = safe_mean_val - 0.1 * safe_std_val
+        safe_LCB = safe_mean_val - info["LCB_constant] * safe_std_val'''
 
-        safe_LCB =  eps*torch.mean(safe_LCB) + (1 - eps) * torch.max(LCB_baseline)
-        safe_action = torch.argmax(LCB_baseline)
+        '''if self.random_state.rand() < eps:
+            safe_vals = safe_net(state, None)
 
-        safe_action = torch.argmax(safe_LCB).item()
-        safe_LCB_value = torch.max(safe_LCB).item()
+            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
+            data = Counter(acts)
+            safe_action = data.most_common(1)[0][0]
+            return eps, safe_action, UNCERTAINITY, 0, 0, 0
 
-        #print(LCB_value,safe_LCB_value)
+        else:
+            vals = policy_net(state, None)
+            vals = torch.cat(vals, 0)
+            mean_val = torch.mean(vals, axis=0)
+            std_val = torch.std(vals, axis=0)
+            LCB = mean_val - info["LCB_constant"] * std_val
+            action = torch.argmax(LCB).item()
+            LCB_value = torch.max(LCB).item()
 
-        if (LCB_value < safe_LCB_value):
-               action = safe_action
-               UNCERTAINITY = True
+            safe_vals = safe_net(state, None)
+            safe_vals = torch.cat(safe_vals, 0)
+            safe_mean_val = torch.mean(safe_vals, axis=0)
+            safe_std_val = torch.std(safe_vals, axis=0)
+            safe_LCB = safe_mean_val - 0.1 * safe_std_val
+            safe_action = torch.argmax(safe_LCB).item()
+            safe_LCB_value = torch.max(safe_LCB).item()
 
-        return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
+
+            if (LCB_value < safe_LCB_value):
+                action = safe_action
+                UNCERTAINITY = True
+'''
 
 
 def get_uncertainity(states):
@@ -604,7 +632,7 @@ if __name__ == '__main__':
     else:
         device = 'cpu'
     print("running on %s" % device)
-    LCB_constant = 3
+    LCB_constant = 0.1
 
 
     info = {
@@ -619,19 +647,19 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 50000,  # how often to update target network
+        "TARGET_UPDATE": 100000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
         "EPS_EVAL": 0.0,  # 0 in osband, .05 in others....
-        #"EPS_ANNEALING_FRAMES": int(1e6),  # this may have been 1e6 in osband
-        "EPS_ANNEALING_FRAMES": 0,
+        "EPS_ANNEALING_FRAMES": int(3e6),  # this may have been 1e6 in osband
+        #"EPS_ANNEALING_FRAMES": 0,
         # if it annealing is zero, then it will only use the bootstrap after the first MIN_EXAMPLES_TO_LEARN steps which are random
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(2.5e5),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": 100000,  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
@@ -656,7 +684,7 @@ if __name__ == '__main__':
         "DEAD_AS_END": True,  # do you send finished=true to agent while training when it loses a life
         "LCB_constant": LCB_constant,
         "Safety_step_number": 0,
-        "Baseline_Value": 15
+        "Baseline_Value": 18
 
     }
 
