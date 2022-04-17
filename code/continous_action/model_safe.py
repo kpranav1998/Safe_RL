@@ -18,10 +18,10 @@ def weights_init_(m):
 
 
 class ValueNetwork(nn.Module):
-    def __init__(self, num_inputs, hidden_dim):
+    def __init__(self, num_inputs, hidden_dim,device):
         super(ValueNetwork, self).__init__()
 
-        self.linear1 = nn.Linear(num_inputs, hidden_dim)
+        self.linear1 = nn.Linear(num_inputs, hidden_dim).to
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
 

@@ -43,7 +43,7 @@ for folder in base_folders:
     if(".png" not in folder and ".npy" not in folder):
         path = os.path.join(BASE_LOAD_PATH,folder)
         print(path)
-        base_reward = np.load(os.path.join(path,"reward.npy"))
+        base_reward = np.load(os.path.join(path,"reward_5127.npy"))
         if(base_reward.shape[0] < length):
             length = base_reward.shape[0]
         base_rewards.append(base_reward)
@@ -65,7 +65,7 @@ while(i < int(1.5e6)):
 for folder in ["seed_1"]:
     if(".png" not in folder and ".npy" not in folder):
         path = os.path.join(BASE_LOAD_PATH,folder)
-        reward = np.load(os.path.join(path,"reward.npy"))
+        reward = np.load(os.path.join(path, "reward_5127.npy"))
         total_steps = 0
 
         rewards.append(reward)

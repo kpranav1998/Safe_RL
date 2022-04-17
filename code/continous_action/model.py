@@ -43,7 +43,6 @@ class QNetwork(nn.Module):
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
 
-
         # Q2 architecture
         self.linear4 = nn.Linear(num_inputs + num_actions, hidden_dim)
         self.linear5 = nn.Linear(hidden_dim, hidden_dim)
@@ -66,6 +65,26 @@ class QNetwork(nn.Module):
 
 
 
+class VPrior(nn.Module):
+    def __init__(self,  n_ensemble, num_inputs, hidden_dim, prior_scale=3):
+        super(VPrior, self).__init__()
+        self.net = nn.ModuleList([ValueNetwork(num_inputs, hidden_dim) for k in range(n_ensemble)])
+        self.prior = nn.ModuleList([ValueNetwork(num_inputs, hidden_dim) for k in range(n_ensemble)])
+        self.n_ensemble = n_ensemble
+        # used when scaling core net
+        self.prior_scale = prior_scale
+
+    def forward(self, state):
+        a = []
+        for k in range(self.n_ensemble):
+            n = self.net[k](state)
+            p = self.prior[k](state)
+            x = n + self.prior_scale * p.detach()
+            a.append(x)
+
+        return a
+
+
 
 class QPrior(nn.Module):
     def __init__(self,  n_ensemble, num_inputs, hidden_dim,num_actions, prior_scale=3):
@@ -80,6 +99,7 @@ class QPrior(nn.Module):
         a1 = []
         a2 = []
         std = []
+        min_vals = []
         for k in range(self.n_ensemble):
             n1,n2 = self.net[k](state,action)
             p1,p2 = self.prior[k](state,action)
@@ -87,13 +107,15 @@ class QPrior(nn.Module):
             y = n2 + self.prior_scale * p2.detach()
             a1.append(x)
             a2.append(y)
+            min_vals.append(torch.min(x,y))
+
             std.append(torch.min(x,y))
 
             #ans.append(self.net[k](state,action) + self.prior_scale * self.prior[k](state,action).detach())
 
         std = torch.cat(std, 0)
         std = torch.std(std, axis=0)
-        return a1,a2,std
+        return a1,a2,std,min_vals
 
 
 class GaussianPolicy(nn.Module):

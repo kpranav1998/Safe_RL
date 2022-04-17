@@ -16,8 +16,8 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Ant-v2",
-                    help='Mujoco Gym environment (default: HalfCheetah-v2)')
+parser.add_argument('--env-name', default="HalfCheetah-v2",
+                    help='Mujoco Gym environment (default: Walker-2D)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
 parser.add_argument('--safe_path',type=str,default="/home/deep8/pranav/Safe_RL_Technion/pytorch-soft-actor-critic/results/HalfCheetah-v2_0/model_10005.67001717289.pkl",
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(1.5e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(3e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -155,12 +155,12 @@ for i_episode in itertools.count(1):
             # Number of updates per step in environment
             for i in range(args.updates_per_step):
                 # Update parameters of all the networks
-                critic_1_loss, critic_2_loss, policy_loss, ent_loss, alpha,uncertainity= agent.update_parameters(memory, args.batch_size, updates)
+                critic_loss,value_loss, policy_loss, ent_loss, alpha,uncertainity= agent.update_parameters(memory, args.batch_size, updates)
                 episode_uncertainity.append(uncertainity.item())
                 writer.add_scalar('uncertainity/model_uncertainity', uncertainity, updates)
                 #writer.add_scalar('uncertainity/safe_model_uncertainity', safe_uncertainity, updates)
-                writer.add_scalar('loss/critic_1', critic_1_loss, updates)
-                writer.add_scalar('loss/critic_2', critic_2_loss, updates)
+                writer.add_scalar('loss/critic', critic_loss, updates)
+                writer.add_scalar('loss/value', value_loss, updates)
                 writer.add_scalar('loss/policy', policy_loss, updates)
                 writer.add_scalar('loss/entropy_loss', ent_loss, updates)
                 writer.add_scalar('entropy_temprature/alpha', alpha, updates)
@@ -186,7 +186,7 @@ for i_episode in itertools.count(1):
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
     np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
-    np.save(os.path.join(model_base_filedir,'reward.npy'), reward_list)
+    np.save(os.path.join(model_base_filedir, 'reward_5127.npy'), reward_list)
     np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
 
     writer.add_scalar('reward/train', episode_reward, i_episode)

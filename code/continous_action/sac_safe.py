@@ -3,9 +3,7 @@ import torch
 import torch.nn.functional as F
 from torch.optim import Adam
 from utils import soft_update, hard_update
-from model_safe import GaussianPolicy, QNetwork, DeterministicPolicy, ValueNetwork, QPrior, ActorPrior
-import matplotlib.pyplot as plt
-import numpy as np
+from model import GaussianPolicy, QNetwork, DeterministicPolicy,QPrior,ActorPrior,VPrior
 
 
 class SAC_Safe(object):
@@ -19,7 +17,7 @@ class SAC_Safe(object):
         self.policy_type = args.policy
         self.target_update_interval = args.target_update_interval
         self.automatic_entropy_tuning = args.automatic_entropy_tuning
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = 'cpu' #torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         print(self.device)
 
@@ -34,6 +32,10 @@ class SAC_Safe(object):
                                   hidden_dim=args.hidden_size).to(self.device)
         self.safe_policy = GaussianPolicy(num_inputs, action_space.shape[0], args.hidden_size, action_space).to(
             self.device)
+
+        self.safe_value_network = VPrior(n_ensemble=self.n_ensemble, num_inputs=num_inputs, hidden_dim=args.hidden_size).to(
+            self.device)
+
 
         hard_update(self.critic_target, self.critic)
 
@@ -66,32 +68,43 @@ class SAC_Safe(object):
 
     def select_action(self, state, evaluate=False, begin=False):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
-        action, _, _ = self.policy(state)
+
+        value = self.safe_value_network(state)
+        value = torch.cat(value, 0)
+        value_mean = torch.mean(value, axis=0)
+        value_std = torch.std(value, axis=0)
+        LCB_safe = value_mean -self.lcb_constant * value_std
+
         safe_action, _, _ = self.safe_policy(state)
-        _, _, uncertainity, q = self.critic(state, action)
-        _, _, uncertainity_safe, q_safe = self.safe_critic(state, safe_action)
 
-        q = torch.cat(q, 0)
-        q_mean = torch.mean(q, axis=0)
+        LCB = None
+        action = None
+        for i in range(5):
+            a, _, _ = self.policy(state)
+            _,_, q_std, q = self.critic(state, a)
 
-        q_safe = torch.cat(q_safe, 0)
-        q_safe_mean = torch.mean(q_safe, axis=0)
+            q = torch.cat(q, 0)
+            q_mean = torch.mean(q, axis=0)
+            q_std = torch.std(q, axis=0)
 
-        LCB = q_mean - self.lcb_constant * uncertainity
-        LCB_safe = q_safe_mean - self.lcb_constant * uncertainity_safe
+            LCB_temp = q_mean - self.lcb_constant * q_std
+            if(LCB == None or LCB_temp> LCB):
+                LCB = LCB_temp
+                action = a
+
 
         if evaluate is False:
 
             if (LCB < LCB_safe):
-                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, q_safe_mean
+                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
             else:
-                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, q_safe_mean
+                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
 
         else:
             if (begin == True):
-                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, q_safe_mean
+                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
             else:
-                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, q_safe_mean
+                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
 
     def update_parameters(self, memory, batch_size, updates):
         # Sample a batch from memory
@@ -136,7 +149,7 @@ class SAC_Safe(object):
             policy_loss += ((self.alpha * log_pi) - min_qf_pi).mean()
             # policy_loss.append(((self.alpha * log_pi) - min_qf_pi).mean()) # Jπ = 𝔼st∼D,εt∼N[α * logπ(f(εt;st)|st) − Q(st,f(εt;st))]
 
-        # policy_loss = policy_loss / self.n_ensemble
+        policy_loss = policy_loss / self.n_ensemble
         self.policy_optim.zero_grad()
         policy_loss.backward()
         self.policy_optim.step()
@@ -154,8 +167,9 @@ class SAC_Safe(object):
             alpha_loss = torch.tensor(0.).to(self.device)
             alpha_tlogs = torch.tensor(self.alpha)  # For TensorboardX logs
 
-        if updates > int(1.6e6) == 0:
-            self.target_update_interval = 30
+
+        '''if updates > int(2e6):
+            self.target_update_interval = 30'''
 
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
@@ -170,10 +184,10 @@ class SAC_Safe(object):
             ckpt_path = "checkpoints/sac_checkpoint_{}_{}".format(env_name, suffix)
         print('Saving models to {}'.format(ckpt_path))
         torch.save({'policy_state_dict': self.policy.state_dict(),
-                    'critic_state_dict': self.critic.state_dict(),
-                    'critic_target_state_dict': self.critic_target.state_dict(),
-                    'critic_optimizer_state_dict': self.critic_optim.state_dict(),
-                    'policy_optimizer_state_dict': self.policy_optim.state_dict()}, ckpt_path)
+                   'critic_state_dict': self.critic.state_dict(),
+                   'critic_target_state_dict': self.critic_target.state_dict(),
+                   'critic_optimizer_state_dict': self.critic_optim.state_dict(),
+                   'policy_optimizer_state_dict': self.policy_optim.state_dict()}, ckpt_path)
 
     # Load model parameters
     def load_checkpoint_safe(self, ckpt_path, evaluate=False):
@@ -189,6 +203,8 @@ class SAC_Safe(object):
             checkpoint = torch.load(ckpt_path, map_location=self.device)
             self.safe_critic.load_state_dict(checkpoint['critic_state_dict'])
             self.safe_policy.load_state_dict(checkpoint['policy_state_dict'])
+            self.safe_value_network.load_state_dict(checkpoint['value_state_dict'])
+
 
 
 

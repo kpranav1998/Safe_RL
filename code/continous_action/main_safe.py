@@ -16,12 +16,12 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Hopper-v2",
+parser.add_argument('--env-name', default="HalfCheetah-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
-parser.add_argument('--lcb', default=0.1,type=float,
+parser.add_argument('--lcb', default=0.05,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Hopper-v2_2/model_2806.139761915278.pkl")
-parser.add_argument('--baseline_performance',default=2300, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./results/Half_cheetah_9570.097865338546.pkl")
+parser.add_argument('--baseline_performance',default=9570, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -51,7 +51,7 @@ parser.add_argument('--updates_per_step', type=int, default=1, metavar='N',
                     help='model updates per simulator step (default: 1)')
 parser.add_argument('--start_steps', type=int, default=10000, metavar='N',
                     help='Steps sampling random actions (default: 10000)')
-parser.add_argument('--target_update_interval', type=int, default=30, metavar='N',
+parser.add_argument('--target_update_interval', type=int, default=70, metavar='N',
                     help='Value target update per no. of updates per step (default: 1)')
 parser.add_argument('--replay_size', type=int, default=1000000, metavar='N',
                     help='size of replay buffer (default: 10000000)')
@@ -120,14 +120,15 @@ def average_plot(list,y_label,save_path, margin=3):
     plt.savefig(save_path + '.png')
 
 
-'''
 
+'''
 episodes = []
 for i in range(50):
     state = env.reset()
     done = False
     episode_steps = 0
     episode_reward = 0
+    j = 1
     while not done:
 
             action,_,_,_,_,_ = agent.select_action(state,evaluate=True,begin=True)  # Sample random action
@@ -138,9 +139,12 @@ for i in range(50):
             mask = 1 if episode_steps == env._max_episode_steps else float(not done)
             state = next_state
     episodes.append(episode_reward)
+    print(episode_reward)
 
-print(episodes)
-print("episode_reward:",np.mean(episodes))
+
+print("mean_reward:",np.mean(episodes))
+print("std_reward:",np.std(episodes))
+
 '''
 for i_episode in itertools.count(1):
     episode_reward = 0
@@ -193,7 +197,6 @@ for i_episode in itertools.count(1):
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
     steps.append(total_numsteps)
-    print(steps[len(steps)])
     np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
     np.save(os.path.join(model_base_filedir,'reward.npy'), reward_list)
     np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
