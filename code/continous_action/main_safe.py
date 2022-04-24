@@ -20,8 +20,8 @@ parser.add_argument('--env-name', default="HalfCheetah-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.05,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Half_cheetah_9570.097865338546.pkl")
-parser.add_argument('--baseline_performance',default=9570, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./results/Half_cheetah_6198.191546634233.pkl")
+parser.add_argument('--baseline_performance',default=6198, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",

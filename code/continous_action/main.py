@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(3e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
