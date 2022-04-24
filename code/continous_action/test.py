@@ -20,7 +20,7 @@ def average_plot(l,margin=100):
     avg_list = np.asarray(avg_list, dtype=np.float32)
     return avg_list
 
-for i in range(1,5):
+for i in range(1,4):
     reward_agent = np.load("./Normal/seed_"+str(i)+"/reward.npy")
     steps_agent = np.load("./Normal/seed_"+str(i)+"/steps.npy")
 
@@ -55,3 +55,5 @@ for i in range(1,5):
     #### agent Walker 4207 mean = 4055, std =40
     #### agent HalfCheetah mean =8828, std = 824
     #### agent HalfCheetah 6198 mean = 5733 , std = 327
+
+
