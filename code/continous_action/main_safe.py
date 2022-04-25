@@ -62,7 +62,7 @@ args = parser.parse_args()
 arg_dict = vars(args)
 
 run_num = 0
-model_base_filedir  = os.path.join("./results", args.env_name + "_" + str(run_num))
+model_base_filedir  = os.path.join("./results", args.env_name + "_safe_" + str(run_num))
 while os.path.exists(model_base_filedir):
             run_num += 1
             model_base_filedir = os.path.join("./results", args.env_name + "_safe_" + str(run_num))
