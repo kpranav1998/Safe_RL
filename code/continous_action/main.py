@@ -186,7 +186,7 @@ for i_episode in itertools.count(1):
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
     np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
-    np.save(os.path.join(model_base_filedir, 'reward_5127.npy'), reward_list)
+    np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_list)
     np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
 
     writer.add_scalar('reward/train', episode_reward, i_episode)

@@ -16,12 +16,12 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="HalfCheetah-v2",
+parser.add_argument('--env-name', default="Ant-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.05,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Half_cheetah_6198.191546634233.pkl")
-parser.add_argument('--baseline_performance',default=6198, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./baselines/Ant_5127.1309506614725.pkl")
+parser.add_argument('--baseline_performance',default=5127, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(3e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')

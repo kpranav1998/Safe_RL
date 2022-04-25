@@ -261,7 +261,14 @@ class ActionGetter:
         vals = torch.cat(vals, 0)
         mean_val = torch.mean(vals, axis=0)
         std_val = torch.std(vals, axis=0)
-        LCB = mean_val - info["LCB_constant"] * std_val
+
+        if(step_number< int(1.5e6)):
+            LCB = mean_val - 10 * std_val
+        elif(step_number> int(1.5e6) and step_number < int(2.5e6)):
+            LCB = mean_val - 1 * std_val
+        elif (step_number > int(2.5e6)):
+            LCB = mean_val - 0.1 * std_val
+
         action = torch.argmax(LCB).item()
         LCB_value = torch.max(LCB).item()
 
@@ -272,6 +279,10 @@ class ActionGetter:
         safe_LCB = safe_mean_val -info["LCB_constant"]  * safe_std_val
         safe_action = torch.argmax(safe_LCB).item()
         safe_LCB_value = torch.max(safe_LCB).item()
+
+        if(LCB_value < safe_LCB_value):
+            action = safe_action
+
         return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
 
         '''vals = policy_net(state, None)
@@ -622,7 +633,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/pong_7.pkl',
+                        default='./pong_7.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -637,7 +648,7 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/pong.bin',  # gym prefix
+        "GAME": './pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'pong_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
