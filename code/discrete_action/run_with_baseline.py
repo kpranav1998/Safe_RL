@@ -34,7 +34,10 @@ Q = []
 safe_Q = []
 LCB_diff = []
 
-
+'''reward_save = np.load("./clip/pacman_safe_v2_08/reward.npy").tolist()
+uncertainity_save = np.load("./clip/pacman_safe_v2_08/uncertainity.npy").tolist()
+steps_save = np.load("./clip/pacman_safe_v2_08/steps.npy").tolist()
+'''
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
     safe_list = np.asarray(safe_uncertainity_save)
@@ -92,6 +95,7 @@ def matplotlib_plot_all(p):
     epoch_num = len(p['steps'])
     epochs = np.arange(epoch_num)
     steps = p['steps']
+    print(model_base_filedir)
     plot_dict_losses({' steps': {'index': epochs, 'val': p['episode_step']}},
                      name=os.path.join(model_base_filedir, 'episode_step.png'), rolling_length=0)
     plot_dict_losses({'episode steps': {'index': epochs, 'val': p['episode_relative_times']}},
@@ -261,14 +265,7 @@ class ActionGetter:
         vals = torch.cat(vals, 0)
         mean_val = torch.mean(vals, axis=0)
         std_val = torch.std(vals, axis=0)
-
-        if(step_number< int(1.5e6)):
-            LCB = mean_val - 10 * std_val
-        elif(step_number> int(1.5e6) and step_number < int(2.5e6)):
-            LCB = mean_val - 1 * std_val
-        elif (step_number > int(2.5e6)):
-            LCB = mean_val - 0.1 * std_val
-
+        LCB = mean_val - info["LCB_constant"] * std_val
         action = torch.argmax(LCB).item()
         LCB_value = torch.max(LCB).item()
 
@@ -284,53 +281,6 @@ class ActionGetter:
             action = safe_action
 
         return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
-
-        '''vals = policy_net(state, None)
-        vals = torch.cat(vals, 0)
-        mean_val = torch.mean(vals, axis=0)
-        std_val = torch.std(vals, axis=0)
-        LCB = mean_val - info["LCB_constant"] * std_val
-        action = torch.argmax(LCB).item()
-        LCB_value = torch.max(LCB).item()
-
-
-        safe_vals = safe_net(state, None)
-        safe_vals = torch.cat(safe_vals, 0)
-        safe_mean_val = torch.mean(safe_vals, axis=0)
-        safe_std_val = torch.std(safe_vals, axis=0)
-        safe_LCB = safe_mean_val - info["LCB_constant] * safe_std_val'''
-
-        '''if self.random_state.rand() < eps:
-            safe_vals = safe_net(state, None)
-
-            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            safe_action = data.most_common(1)[0][0]
-            return eps, safe_action, UNCERTAINITY, 0, 0, 0
-
-        else:
-            vals = policy_net(state, None)
-            vals = torch.cat(vals, 0)
-            mean_val = torch.mean(vals, axis=0)
-            std_val = torch.std(vals, axis=0)
-            LCB = mean_val - info["LCB_constant"] * std_val
-            action = torch.argmax(LCB).item()
-            LCB_value = torch.max(LCB).item()
-
-            safe_vals = safe_net(state, None)
-            safe_vals = torch.cat(safe_vals, 0)
-            safe_mean_val = torch.mean(safe_vals, axis=0)
-            safe_std_val = torch.std(safe_vals, axis=0)
-            safe_LCB = safe_mean_val - 0.1 * safe_std_val
-            safe_action = torch.argmax(safe_LCB).item()
-            safe_LCB_value = torch.max(safe_LCB).item()
-
-
-            if (LCB_value < safe_LCB_value):
-                action = safe_action
-                UNCERTAINITY = True
-'''
-
 
 def get_uncertainity(states):
     states = np.expand_dims(states, axis=0)
@@ -468,7 +418,15 @@ def train(step_number, last_save):
 
                 state = next_state
 
-                if step_number % info['LEARN_EVERY_STEPS'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
+                if(step_number > int(5.2e6) and step_number < int(8e6)):
+                    info["TARGET_UPDATE"] =30000
+
+                elif(step_number >= int(8e6)):
+                    info["TARGET_UPDATE"] = 10000
+
+
+
+                if step_number % info['LEARN_EVERY_STEPS'] == 0 and (step_number) > info['MIN_HISTORY_TO_LEARN']:
                     _states, _actions, _rewards, _next_states, _terminal_flags, _masks = replay_memory.get_minibatch(
                         info['BATCH_SIZE'])
 
@@ -594,7 +552,7 @@ def baseline_evaluate():
     frames_for_gif = []
     results_for_eval = []
     # only run one
-    for i in range(10):
+    for i in range(50):
         seed = random.randint(1,100000)
         np.random.seed(seed)
         torch.manual_seed(seed)
@@ -623,7 +581,7 @@ def baseline_evaluate():
         eval_rewards.append(episode_reward_sum)
         print(episode_reward_sum)
 
-    print("Evaluation score:\n", np.mean(eval_rewards))
+    print("Evaluation score:\n", np.mean(eval_rewards),np.std(eval_rewards))
 
 
 if __name__ == '__main__':
@@ -633,7 +591,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./pong_7.pkl',
+                        default='./pacman_rpf_0002001399q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -648,9 +606,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": './pong.bin',  # gym prefix
+        "GAME": './ms_pacman.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'pong_safe_v2_',  # start files with name
+        "NAME": 'pacman_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -688,7 +646,7 @@ if __name__ == '__main__':
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(20e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -759,7 +717,7 @@ if __name__ == '__main__':
                 'eval_rewards': [],
                 'eval_steps': []}
 
-        start_step_number = 0
+        start_step_number = 0#steps_save[len(steps_save) -1]
         start_last_save = 0
         # make new directory for this run in the case that there is already a
         # project with this name
@@ -803,7 +761,12 @@ if __name__ == '__main__':
 
         safe_net = NetWithPrior(safe_net, prior_net, info['PRIOR_SCALE'])
 
-    target_net.load_state_dict(policy_net.state_dict())
+    '''model_dict = torch.load("./clip/pacman_safe_v2_08/pacman_safe_v2__0004002110q.pkl")
+    policy_net.load_state_dict(model_dict['policy_net_state_dict'])
+    target_net.load_state_dict(model_dict['target_net_state_dict'])
+    '''
+    opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
+    #opt.load_state_dict(model_dict['optimizer'])
 
     #### safe model ####
     print('safe model from: %s' % args.safe_model_loadpath)
@@ -820,7 +783,7 @@ if __name__ == '__main__':
     #                    eps=info["RMS_EPSILON"],
     #                    centered=info["RMS_CENTERED"],
     #                    alpha=info["RMS_DECAY"])
-    opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
+    #opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
 
 
     if args.model_loadpath is not '':
@@ -829,7 +792,7 @@ if __name__ == '__main__':
         target_net.load_state_dict(model_dict['target_net_state_dict'])
         policy_net.load_state_dict(model_dict['policy_net_state_dict'])
 
-        opt.load_state_dict(model_dict['optimizer'])
+        #opt.load_state_dict(model_dict['optimizer'])
         print("loaded model state_dicts")
         if args.buffer_loadpath == '':
             args.buffer_loadpath = args.model_loadpath.replace('.pkl', '_train_buffer.npz')

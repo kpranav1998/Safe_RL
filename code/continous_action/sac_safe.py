@@ -168,9 +168,6 @@ class SAC_Safe(object):
             alpha_tlogs = torch.tensor(self.alpha)  # For TensorboardX logs
 
 
-        '''if updates > int(2e6):
-            self.target_update_interval = 30'''
-
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
 

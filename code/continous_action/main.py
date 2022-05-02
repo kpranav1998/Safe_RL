@@ -16,7 +16,7 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="HalfCheetah-v2",
+parser.add_argument('--env-name', default="Hopper-v2",
                     help='Mujoco Gym environment (default: Walker-2D)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')

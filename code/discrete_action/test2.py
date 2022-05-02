@@ -15,14 +15,23 @@ def average_plot(l,margin=100):
     return avg_list
 
 
-reward = average_plot(np.load("./reward.npy"),20)
-reward_safe = average_plot(np.load("./reward_safe.npy"),20)
+reward = average_plot(np.load("./PacMAN/Good/seed_1/reward.npy"),200)
+reward_safe = average_plot(np.load("./PacMAN/Normal/seed_1/reward.npy"),200)
 
-steps = np.load("./steps.npy").tolist()
+steps = np.load("./PacMAN/Good/seed_1/steps.npy").tolist()[0:len(reward)]
+steps_safe = np.load("./PacMAN/Normal/seed_1/steps.npy").tolist()[0:len(reward_safe)]
+
+i = 0
+while(steps[i] < int(8e6)):
+    i = i + 1
+
+reward = reward[0:i]
+steps = steps[0:i]
+
 
 plt.figure()
-plt.plot(reward)
-plt.plot(reward_safe)
+plt.plot(steps,reward)
+plt.plot(steps_safe,reward_safe)
 
 plt.show()
 
