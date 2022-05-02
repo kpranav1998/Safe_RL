@@ -591,7 +591,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./pacman_rpf_0002001399q.pkl',
+                        default='./freeway_15.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -606,7 +606,7 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": './ms_pacman.bin',  # gym prefix
+        "GAME": './freeway.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'pacman_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
@@ -803,9 +803,9 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    #baseline_evaluate()
+    baseline_evaluate()
 
-    train(start_step_number, start_last_save)
+    #train(start_step_number, start_last_save)
     # evaluate(0)
 
     ## pong_rpf_0001406541q = -4
