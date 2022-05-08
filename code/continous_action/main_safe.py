@@ -20,7 +20,7 @@ parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Pend_569.1632945845348.pkl")
+parser.add_argument('--safe_path',type=str,default="./results/Pend_1307.902510589936.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -125,7 +125,7 @@ def average_plot(list,y_label,save_path, margin=3):
 
 
 episodes = []
-'''
+
 for i in range(50):
     state = env.reset()
     done = False
@@ -236,3 +236,4 @@ for i_episode in itertools.count(1):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()
+'''
