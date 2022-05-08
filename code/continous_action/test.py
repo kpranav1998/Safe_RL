@@ -56,6 +56,11 @@ def average_plot(l,margin=100):
     #### agent HalfCheetah mean =8828, std = 824
     #### agent HalfCheetah 6198 mean = 5733 , std = 327
     #### agent Hopper 2920 mean = 2826 , std = 205
+    #### agent Swimmer 15 mean = 14 , std = 4
+    ### agent Pendulum mean_reward: 1575.9162815434154 std_reward: 571.9426575564491
+    ### agent Pendulum mean_reward: 722.2692594516022 std_reward: 346.67515195792987
+
+
 
 
 reward_agent = np.load("./reward.npy")

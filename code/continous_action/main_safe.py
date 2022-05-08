@@ -16,12 +16,12 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Hopper-v2",
+parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
-parser.add_argument('--lcb', default=0.05,type=float,
+parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Hopper_2920.351586802534.pkl")
-parser.add_argument('--baseline_performance',default=4399, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./results/Pend_569.1632945845348.pkl")
+parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5e5), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -51,7 +51,7 @@ parser.add_argument('--updates_per_step', type=int, default=1, metavar='N',
                     help='model updates per simulator step (default: 1)')
 parser.add_argument('--start_steps', type=int, default=10000, metavar='N',
                     help='Steps sampling random actions (default: 10000)')
-parser.add_argument('--target_update_interval', type=int, default=180, metavar='N',
+parser.add_argument('--target_update_interval', type=int, default=30, metavar='N',
                     help='Value target update per no. of updates per step (default: 1)')
 parser.add_argument('--replay_size', type=int, default=1000000, metavar='N',
                     help='size of replay buffer (default: 10000000)')
@@ -91,16 +91,18 @@ writer = SummaryWriter(model_base_filedir+'/{}_SAC_{}_{}_{}'.format(datetime.dat
 memory = ReplayMemory(args.replay_size, args.seed)
 
 # Training Loop
-total_numsteps = 0
-updates = 0
+
 
 run_num = 0
-'''reward_list = np.load("./results/Hopper-v2_safe_4/reward.npy").tolist()
-uncertainity_list = np.load("./results/Hopper-v2_safe_4/uncertainity.npy",allow_pickle=True).tolist()'''
-
+'''reward_list = np.load("./results/Hopper-v2_safe_1/reward.npy").tolist()
+uncertainity_list = np.load("./results/Hopper-v2_safe_1/uncertainity.npy",allow_pickle=True).tolist()
+steps = np.load("./results/Hopper-v2_safe_1/steps.npy").tolist()'''
 reward_list = []
 uncertainity_list = []
 steps = []
+
+total_numsteps = 0
+updates = 0
 
 
 
@@ -121,8 +123,9 @@ def average_plot(list,y_label,save_path, margin=3):
 
 
 
-'''
+
 episodes = []
+'''
 for i in range(50):
     state = env.reset()
     done = False
@@ -229,7 +232,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 50 == 0):
+    if(i_episode % 500 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

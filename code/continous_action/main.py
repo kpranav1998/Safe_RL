@@ -16,7 +16,7 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Hopper-v2",
+parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
                     help='Mujoco Gym environment (default: Walker-2D)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
@@ -41,9 +41,9 @@ parser.add_argument('--automatic_entropy_tuning', type=bool, default=False, meta
                     help='Automaically adjust α (default: False)')
 parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metavar='N',
                     help='random seed (default: 123456)')
-parser.add_argument('--batch_size', type=int, default=64, metavar='N',
+parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(1e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -217,7 +217,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 50 == 0):
+    if(i_episode % 5 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

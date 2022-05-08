@@ -34,9 +34,9 @@ Q = []
 safe_Q = []
 LCB_diff = []
 
-'''reward_save = np.load("./clip/pacman_safe_v2_08/reward.npy").tolist()
-uncertainity_save = np.load("./clip/pacman_safe_v2_08/uncertainity.npy").tolist()
-steps_save = np.load("./clip/pacman_safe_v2_08/steps.npy").tolist()
+'''reward_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/reward.npy").tolist()
+uncertainity_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/uncertainity.npy").tolist()
+steps_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/steps.npy").tolist()
 '''
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
@@ -418,7 +418,7 @@ def train(step_number, last_save):
 
                 state = next_state
 
-                if(step_number > int(5.2e6) and step_number < int(8e6)):
+                if(step_number > int(1.2e6) and step_number < int(8e6)):
                     info["TARGET_UPDATE"] =30000
 
                 elif(step_number >= int(8e6)):
@@ -457,7 +457,7 @@ def train(step_number, last_save):
                     np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
 
             if (step_number > info["MIN_HISTORY_TO_LEARN"]):
-                steps_save.append(steps2)
+                steps_save.append(step_number)
                 uncertainity_save.append(np.mean(episode_uncertainity))
                 safe_uncertainity_save.append(np.mean(safe_episode_uncertainity))
                 loss_save.append(np.mean(episode_loss))
@@ -591,7 +591,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='/content/freeway_15.pkl',
+                        default='./results/pacman_rpf_0002001399q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -606,7 +606,7 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": '/content/freeway.bin',  # gym prefix
+        "GAME": 'roms/ms_pacman.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'pacman_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
@@ -628,8 +628,8 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": 100000,  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(1e7),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": int(1e7),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
         "RMS_DECAY": 0.95,
@@ -646,14 +646,14 @@ if __name__ == '__main__':
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(8.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
         "DEAD_AS_END": True,  # do you send finished=true to agent while training when it loses a life
         "LCB_constant": LCB_constant,
         "Safety_step_number": 0,
-        "Baseline_Value": 18
+        "Baseline_Value": "NA"
 
     }
 
@@ -698,11 +698,33 @@ if __name__ == '__main__':
         info['DEVICE'] = device
         # set a new random seed
         info["SEED"] = model_dict['cnt']
-        model_base_filedir = os.path.split(args.model_loadpath)[0]
+        #model_base_filedir = os.path.split(args.model_loadpath)[0]
+        run_num = 0
+        model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
+        while os.path.exists(model_base_filedir):
+            run_num += 1
+            model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
+        os.makedirs(model_base_filedir)
+        print("----------------------------------------------")
+        print("starting NEW project: %s" % model_base_filedir)
+
         start_step_number = start_last_save = model_dict['cnt']
         info['loaded_from'] = args.model_loadpath
         perf = model_dict['perf']
+
         start_step_number = perf['steps'][-1]
+        perf = {'steps': [],
+                'avg_rewards': [],
+                'episode_step': [],
+                'episode_head': [],
+                'eps_list': [],
+                'episode_loss': [],
+                'episode_reward': [],
+                'episode_times': [],
+                'episode_relative_times': [],
+                'eval_rewards': [],
+                'eval_steps': []}
+
     else:
         # create new project
         perf = {'steps': [],
@@ -806,23 +828,3 @@ if __name__ == '__main__':
     baseline_evaluate()
 
     #train(start_step_number, start_last_save)
-    # evaluate(0)
-
-    ## pong_rpf_0001406541q = -4
-    ## pong_rpf_0001608609q = 7
-    ## pong_rpf_0002010506q = 20
-
-
-    ##freeway
-
-    ## freeway_rpf_0001402650q = 13
-    ## freeway_rpf_0002003803q =25
-    ## freeway_rpf_0001803444q = 15
-
-    ##qbert
-    ##qbert_rpf_0010024340q = 11600
-    ## qbert_rpf_0009623049q = 10975
-    ## qbert_rpf_0007017170q = 7300
-    ## qbert_rpf_0005412569q = 5000
-
-    ##breakout_rpf_0002001346q.pkl = 310,248,299

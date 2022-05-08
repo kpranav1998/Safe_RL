@@ -8,7 +8,7 @@ import numpy as np
 from IPython import embed
 from collections import Counter
 import torch
-
+import random
 torch.set_num_threads(2)
 import torch.nn as nn
 import torch.nn.functional as F
@@ -108,7 +108,7 @@ def handle_checkpoint(last_save, cnt):
         filename = os.path.abspath(model_base_filepath + "_%010dq.pkl" % cnt)
         buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
         #replay_memory.save_buffer(buff_filename)
-        print("Saved Buffer")
+        #print("Saved Buffer")
         save_checkpoint(state, filename)
         # npz will be added
 
@@ -409,10 +409,11 @@ if __name__ == '__main__':
         device = 'cuda'
     else:
         device = 'cpu'
+
     print("running on %s" % device)
 
     info = {
-        "GAME":'./ms_pacman.bin', # gym prefix
+        "GAME":'roms/ms_pacman.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'pacman_rpf',  # start files with name
@@ -435,8 +436,8 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(5e5),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": int(1e5),  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": int(1e6),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
         "RMS_DECAY": 0.95,
@@ -445,15 +446,15 @@ if __name__ == '__main__':
         "RMS_CENTERED": True,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
         "N_EPOCHS": 90000,  # Number of episodes to run
-        "BATCH_SIZE": 21,  # Batch size to use for learning
+        "BATCH_SIZE": 64,  # Batch size to use for learning
         "GAMMA": .99,  # Gamma weight in Q update
         "PLOT_EVERY_EPISODES": 50,
         "CLIP_GRAD": 5,  # Gradient clipping setting
-        "SEED": 101,
+        "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "START_TIME": time.time(),
-        "MAX_STEPS": int(10.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(8e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode

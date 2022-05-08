@@ -167,6 +167,8 @@ class SAC_Safe(object):
             alpha_loss = torch.tensor(0.).to(self.device)
             alpha_tlogs = torch.tensor(self.alpha)  # For TensorboardX logs
 
+        if updates > int(1e5):
+            self.target_update_interval = 3
 
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
@@ -190,7 +192,7 @@ class SAC_Safe(object):
     def load_checkpoint_safe(self, ckpt_path, evaluate=False):
         print('Loading models from {}'.format(ckpt_path))
         if ckpt_path is not None:
-            '''c2 = torch.load("./results/Hopper-v2_safe_4/model_3310.4822838340683.pkl", map_location=self.device)
+            '''c2 = torch.load("./results/Hopper-v2_safe_1/model_608.964345288995.pkl", map_location=self.device)
             self.policy.load_state_dict(c2['policy_state_dict'])
             self.critic.load_state_dict(c2['critic_state_dict'])
             self.critic_target.load_state_dict(c2['critic_target_state_dict'])
