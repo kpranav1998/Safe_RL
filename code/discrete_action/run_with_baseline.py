@@ -21,53 +21,10 @@ from replay import ReplayMemory
 import config
 import random
 
+
 reward_save = []
-loss_save = []
-no_of_calls_to_baseline = []
-episode_steps_list = []
-
-
 steps_save = []
-uncertainity_save = []
-safe_uncertainity_save = []
-Q = []
-safe_Q = []
-LCB_diff = []
 
-'''reward_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/reward.npy").tolist()
-uncertainity_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/uncertainity.npy").tolist()
-steps_save = np.load("../input/pacman-seed-2v2/clip/pacman_safe_v2_00/steps.npy").tolist()
-'''
-def average_plot(list, save_path, y_label, margin=50):
-    list = np.asarray(list)
-    safe_list = np.asarray(safe_uncertainity_save)
-    avg_list = []
-
-    for i in range(list.shape[0] - margin):
-        temp = 0
-        for j in range(margin):
-            temp = temp + list[i + j]
-        temp = np.float32(temp) / margin
-        avg_list.append(temp)
-    avg_list = np.asarray(avg_list, dtype=np.float32)
-    plt.figure()
-    plt.ylabel(y_label)
-    plt.plot(avg_list, color='r')
-    if (y_label == "uncertainity"):
-
-        safe_avg_list = []
-        for i in range(safe_list.shape[0] - margin):
-            temp = 0
-            for j in range(margin):
-                temp = temp + safe_list[i + j]
-            temp = np.float32(temp) / margin
-            safe_avg_list.append(temp)
-        safe_avg_list = np.asarray(safe_avg_list, dtype=np.float32)
-        plt.plot(safe_avg_list, 'b')  # plotting t, b separately
-        plt.legend(["Model Uncertainity", "Safe Uncertainity"], loc="upper right")
-
-    plt.savefig(save_path + '.png')
-    plt.close()
 
 
 def rolling_average(a, n=5):
@@ -104,8 +61,7 @@ def matplotlib_plot_all(p):
                      name=os.path.join(model_base_filedir, 'episode_head.png'), rolling_length=0)
     plot_dict_losses({'steps loss': {'index': steps, 'val': p['episode_loss']}},
                      name=os.path.join(model_base_filedir, 'steps_loss.png'))
-    plot_dict_losses({'steps eps': {'index': steps, 'val': p['eps_list']}},
-                     name=os.path.join(model_base_filedir, 'steps_mean_eps.png'), rolling_length=0)
+
     plot_dict_losses({'steps reward': {'index': steps, 'val': p['episode_reward']}},
                      name=os.path.join(model_base_filedir, 'steps_reward.png'), rolling_length=0)
     plot_dict_losses({'episode reward': {'index': epochs, 'val': p['episode_reward']}},
@@ -134,7 +90,8 @@ def handle_checkpoint(last_save, cnt):
         save_checkpoint(state, filename)
         # npz will be added
         buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
-        #replay_memory.save_buffer(buff_filename)
+        if(info["SAVE_MEMORY_BUFFER"] == True):
+            replay_memory.save_buffer(buff_filename)
         print("finished checkpoint", time.time() - st)
         return last_save
     else:
@@ -143,155 +100,67 @@ def handle_checkpoint(last_save, cnt):
 
 class ActionGetter:
     """Determines an action according to an epsilon greedy strategy with annealing epsilon"""
-    """This class is from fg91's dqn. TODO put my function back in"""
 
-    def __init__(self, n_actions, eps_initial=1, eps_final=0.1, eps_final_frame=0.01,
-                 eps_evaluation=0.0, eps_annealing_frames=100000,
-                 replay_memory_start_size=50000, max_steps=25000000, random_seed=122):
-        """
-        Args:
-            n_actions: Integer, number of possible actions
-            eps_initial: Float, Exploration probability for the first
-                replay_memory_start_size frames
-            eps_final: Float, Exploration probability after
-                replay_memory_start_size + eps_annealing_frames frames
-            eps_final_frame: Float, Exploration probability after max_frames frames
-            eps_evaluation: Float, Exploration probability during evaluation
-            eps_annealing_frames: Int, Number of frames over which the
-                exploration probabilty is annealed from eps_initial to eps_final
-            replay_memory_start_size: Integer, Number of frames during
-                which the agent only explores
-            max_frames: Integer, Total number of frames shown to the agent
-        """
+    def __init__(self, n_actions, replay_memory_start_size=50000, max_steps=25000000, random_seed=122):
+
         self.n_actions = n_actions
-        self.eps_initial = eps_initial
-        self.eps_final = eps_final
-        self.eps_final_frame = eps_final_frame
-        self.eps_evaluation = eps_evaluation
-        self.eps_annealing_frames = eps_annealing_frames
         self.replay_memory_start_size = replay_memory_start_size
         self.max_steps = max_steps
         self.random_state = np.random.RandomState(random_seed)
 
-        # Slopes and intercepts for exploration decrease
-        if self.eps_annealing_frames > 0:
-            self.slope = -(self.eps_initial - self.eps_final) / self.eps_annealing_frames
-            self.intercept = self.eps_initial - self.slope * self.replay_memory_start_size
-            self.slope_2 = -(self.eps_final - self.eps_final_frame) / (
-                    self.max_steps - self.eps_annealing_frames - self.replay_memory_start_size)
-            self.intercept_2 = self.eps_final_frame - self.slope_2 * self.max_steps
-
-    def pt_get_action(self, step_number, state, active_head=None, evaluation=False,baseline_evaluation=False):
-
-
-        """
-        Args:
-            step_number: int number of the current step
-            state: A (4, 84, 84) sequence of frames of an atari game in grayscale
-            active_head: number of head to use, if None, will run all heads and vote
-            evaluation: A boolean saying whether the agent is being evaluated
-        Returns:
-            An integer between 0 and n_actions
-        """
-        if evaluation:
-            eps = self.eps_evaluation
-        elif step_number < self.replay_memory_start_size:
-            eps = self.eps_initial
-        elif self.eps_annealing_frames > 0:
-            # TODO check this
-            if step_number >= self.replay_memory_start_size and step_number < self.replay_memory_start_size + self.eps_annealing_frames:
-                eps = self.slope * step_number + self.intercept
-            elif step_number >= self.replay_memory_start_size + self.eps_annealing_frames:
-                eps = self.slope_2 * step_number + self.intercept_2
-        else:
-            eps = 0
-        '''
-        if self.random_state.rand() < eps:
-            return eps, self.random_state.randint(0, self.n_actions),False
-        else:
-
-        '''
+    def pt_get_action(self, step_number, state, evaluation=False,baseline_evaluation=False):
 
         state = torch.Tensor(state.astype(np.float) / info['NORM_BY'])[None, :].to(info['DEVICE'])
-        UNCERTAINITY = False
-
-
 
         if (evaluation == True):
+            '''
+            For evaluating the agent without baseline I using voting to decide the appropriate action
+            '''
             vals = policy_net(state, None)
-
             acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
             data = Counter(acts)
             action = data.most_common(1)[0][0]
-            UNCERTAINITY = True
-
-
-            return 0, action, UNCERTAINITY, None, None, None
+            return action
 
         elif (baseline_evaluation == True):
-            '''safe_vals = safe_net(state, None)
-
-            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            action = data.most_common(1)[0][0]
-            UNCERTAINITY = True
-
-            vals = policy_net(state, None)
-            vals = torch.cat(vals, 0)
-            mean_val = torch.mean(vals, axis=0)
-            std_val = torch.std(vals, axis=0)
-            LCB = mean_val - info["LCB_constant"] * std_val
-            action = torch.argmax(LCB).item()
-            LCB_value = torch.max(LCB).item()'''
-
             safe_vals = safe_net(state, None)
             safe_vals = torch.cat(safe_vals, 0)
             safe_mean_val = torch.mean(safe_vals, axis=0)
             safe_std_val = torch.std(safe_vals, axis=0)
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
             safe_action = torch.argmax(safe_LCB).item()
-            safe_LCB_value = torch.max(safe_LCB).item()
-            return 0, safe_action, UNCERTAINITY, None, None, None
+            return safe_action
 
         elif(step_number < self.replay_memory_start_size):
             safe_vals = safe_net(state, None)
+            safe_vals = torch.cat(safe_vals, 0)
+            safe_mean_val = torch.mean(safe_vals, axis=0)
+            safe_std_val = torch.std(safe_vals, axis=0)
+            safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
+            safe_action = torch.argmax(safe_LCB).item()
+            return safe_action
 
-            acts = [torch.argmax(safe_vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
-            data = Counter(acts)
-            safe_action = data.most_common(1)[0][0]
-            return 0, safe_action, UNCERTAINITY, 0,0,0
+        else:
+            vals = policy_net(state, None)
+            vals = torch.cat(vals, 0)
+            mean_val = torch.mean(vals, axis=0)
+            std_val = torch.std(vals, axis=0)
+            LCB = mean_val - info["LCB_constant"] * std_val
+            action = torch.argmax(LCB).item()
+            LCB_value = torch.max(LCB).item()
 
-        vals = policy_net(state, None)
-        vals = torch.cat(vals, 0)
-        mean_val = torch.mean(vals, axis=0)
-        std_val = torch.std(vals, axis=0)
-        LCB = mean_val - info["LCB_constant"] * std_val
-        action = torch.argmax(LCB).item()
-        LCB_value = torch.max(LCB).item()
+            safe_vals = safe_net(state, None)
+            safe_vals = torch.cat(safe_vals, 0)
+            safe_mean_val = torch.mean(safe_vals, axis=0)
+            safe_std_val = torch.std(safe_vals, axis=0)
+            safe_LCB = safe_mean_val -info["LCB_constant"]  * safe_std_val
+            safe_action = torch.argmax(safe_LCB).item()
+            safe_LCB_value = torch.max(safe_LCB).item()
 
-        safe_vals = safe_net(state, None)
-        safe_vals = torch.cat(safe_vals, 0)
-        safe_mean_val = torch.mean(safe_vals, axis=0)
-        safe_std_val = torch.std(safe_vals, axis=0)
-        safe_LCB = safe_mean_val -info["LCB_constant"]  * safe_std_val
-        safe_action = torch.argmax(safe_LCB).item()
-        safe_LCB_value = torch.max(safe_LCB).item()
+            if(LCB_value < safe_LCB_value):
+                action = safe_action
 
-        if(LCB_value < safe_LCB_value):
-            action = safe_action
-
-        return eps, action, UNCERTAINITY, LCB_value, safe_LCB_value, (safe_LCB_value - LCB_value)
-
-def get_uncertainity(states):
-    states = np.expand_dims(states, axis=0)
-    states = torch.Tensor(states.astype(np.float) / info['NORM_BY']).to(info['DEVICE'])
-    q_policy_vals = policy_net(states, None)
-    q_list = []
-    for element in q_policy_vals:
-        q_list.append(element.cpu().data.numpy())
-    uncertainity = np.mean(np.std(q_list, axis=0))
-    return uncertainity
-
+            return action
 
 def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
     states = torch.Tensor(states.astype(np.float) / info['NORM_BY']).to(info['DEVICE'])
@@ -304,19 +173,7 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
     losses = [0.0 for _ in range(info['N_ENSEMBLE'])]
     opt.zero_grad()
     q_policy_vals = policy_net(states, None)
-    safe_q_policy_vals = safe_net(states, None)
 
-    q_list = []
-    for element in q_policy_vals:
-        q_list.append(element.cpu().data.numpy())
-
-    uncertainity = np.mean(np.std(q_list, axis=0))
-
-    safe_q_List = []
-    for element in safe_q_policy_vals:
-        safe_q_List.append(element.cpu().data.numpy())
-
-    safe_uncertainity = np.mean(np.std(safe_q_List, axis=0))
 
     next_q_target_vals = target_net(next_states, None)
     next_q_policy_vals = policy_net(next_states, None)
@@ -348,19 +205,17 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
             param.grad.data *= 1.0 / float(info['N_ENSEMBLE'])
     nn.utils.clip_grad_norm_(policy_net.parameters(), info['CLIP_GRAD'])
     opt.step()
-    return np.mean(losses), uncertainity, safe_uncertainity
+    return np.mean(losses)
 
 
 def train(step_number, last_save):
     """Contains the training and evaluation loops"""
     epoch_num = len(perf['steps'])
-    steps2 = 0
-    while steps2 < info['MAX_STEPS']:
+    while step_number < info['MAX_STEPS']:
         ########################
         ####### Training #######
         ########################
         epoch_frame = 0
-        steps = 0
 
         while epoch_frame < info['EVAL_FREQUENCY']:
             terminal = False
@@ -377,29 +232,14 @@ def train(step_number, last_save):
 
             episode_reward_sum = 0
             episode_steps = 0
-
-            episode_uncertainity = []
-            safe_episode_uncertainity = []
-
-            episode_LCB = []
-            episode_safe_LCB = []
-            episode_LCB_diff = []
             episode_loss = []
+
             while not terminal:
                 if life_lost:
                     action = 1
-                    eps = 0
                 else:
-                    eps, action, uncertainity_flag, q, s_q, lcb_diff = action_getter.pt_get_action(step_number,
-                                                                                                   state=state,
-                                                                                                   active_head=None,
-                                                                                                   )
-                    episode_LCB.append(q)
-                    episode_safe_LCB.append(s_q)
-                    episode_LCB_diff.append(lcb_diff)
+                    action = action_getter.pt_get_action(step_number,state=state)
 
-
-                ep_eps_list.append(eps)
                 episode_steps = episode_steps + 1
 
                 next_state, reward, life_lost, terminal = env.step(action)
@@ -412,79 +252,44 @@ def train(step_number, last_save):
                 step_number += 1
                 epoch_frame += 1
                 episode_reward_sum += reward
-                steps2 +=1
-                #print("episode_steps,episode_no_of_uncertainity",episode_steps,episode_no_of_uncertainity)
-                #print("episode_reward_sum: ",episode_reward_sum)
-
                 state = next_state
-
-                if(step_number > int(1.2e6) and step_number < int(8e6)):
-                    info["TARGET_UPDATE"] =30000
-
-                elif(step_number >= int(8e6)):
-                    info["TARGET_UPDATE"] = 10000
-
 
 
                 if step_number % info['LEARN_EVERY_STEPS'] == 0 and (step_number) > info['MIN_HISTORY_TO_LEARN']:
                     _states, _actions, _rewards, _next_states, _terminal_flags, _masks = replay_memory.get_minibatch(
                         info['BATCH_SIZE'])
 
-                    ptloss, uncertainity, safe_uncertainity = ptlearn(_states, _actions, _rewards, _next_states,
-                                                                      _terminal_flags, _masks)
-                    episode_uncertainity.append(uncertainity)
-                    safe_episode_uncertainity.append(safe_uncertainity)
+                    ptloss = ptlearn(_states, _actions, _rewards, _next_states,_terminal_flags, _masks)
                     episode_loss.append(ptloss)
                     ptloss_list.append(ptloss)
                 if step_number % info['TARGET_UPDATE'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
                     print("++++++++++++++++++++++++++++++++++++++++++++++++")
                     print('updating target network at %s' % step_number)
                     target_net.load_state_dict(policy_net.state_dict())
-                    average_plot(uncertainity_save, os.path.join(model_base_filedir, 'uncertainity'), 'uncertainity')
-                    average_plot(LCB_diff, os.path.join(model_base_filedir, 'LCB_difference'), 'LCB_difference')
-                    average_plot(Q, os.path.join(model_base_filedir, 'Q'), 'Q')
-                    average_plot(safe_Q, os.path.join(model_base_filedir, 'safe_Q'), 'safe_Q')
-                    average_plot(episode_steps_list, os.path.join(model_base_filedir, 'episode_steps'), 'episode_steps')
-
-                    average_plot(loss_save, os.path.join(model_base_filedir, 'loss'), 'loss')
-                    average_plot(no_of_calls_to_baseline, os.path.join(model_base_filedir, 'no_of_calls_to_baseline'),
-                                 'no_of_calls_to_baseline')
-
-                    print("Saved at: ", os.path.join(model_base_filedir, 'uncertainity.npy'))
-                    np.save(os.path.join(model_base_filedir, 'uncertainity.npy'), uncertainity_save)
                     np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
-                    np.save(os.path.join(model_base_filedir, 'no_of_calls_to_baseline.npy'), no_of_calls_to_baseline)
                     np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
 
             if (step_number > info["MIN_HISTORY_TO_LEARN"]):
                 steps_save.append(step_number)
-                uncertainity_save.append(np.mean(episode_uncertainity))
-                safe_uncertainity_save.append(np.mean(safe_episode_uncertainity))
-                loss_save.append(np.mean(episode_loss))
                 reward_save.append(episode_reward_sum)
-                Q.append(np.mean(episode_LCB))
-                safe_Q.append(np.mean(episode_safe_LCB))
-                LCB_diff.append(np.mean(episode_LCB_diff))
-                episode_steps_list.append(episode_steps)
 
-            print(episode_reward_sum)
+            #print(episode_reward_sum)
             et = time.time()
             ep_time = et - st
             perf['steps'].append(step_number)
             perf['episode_step'].append(step_number - start_steps)
             perf['episode_head'].append(active_head)
-            perf['eps_list'].append(np.mean(ep_eps_list))
             perf['episode_loss'].append(np.mean(ptloss_list))
             perf['episode_reward'].append(episode_reward_sum)
             perf['episode_times'].append(ep_time)
             perf['episode_relative_times'].append(time.time() - info['START_TIME'])
-            perf['avg_rewards'].append(np.mean(perf['episode_reward'][-100:]))
+            perf['avg_rewards'].append(np.mean(perf['episode_reward'][-info["PLOT_EVERY_EPISODES"]:]))
             last_save = handle_checkpoint(last_save, step_number)
 
-            if not epoch_num % info['PLOT_EVERY_EPISODES'] and step_number > info['MIN_HISTORY_TO_LEARN']:
+            if epoch_num % info["PLOT_EVERY_EPISODES"] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
                 # TODO plot title
                 print('avg reward', perf['avg_rewards'][-1])
-                print('last rewards', perf['episode_reward'][-info['PLOT_EVERY_EPISODES']:])
+                print('last rewards', perf['episode_reward'][-info["PLOT_EVERY_EPISODES"]:])
 
                 matplotlib_plot_all(perf)
                 with open('rewards.txt', 'a') as reward_file:
@@ -516,8 +321,7 @@ def evaluate(step_number):
             if life_lost:
                 action = 1
             else:
-                eps, action, _, x, y, z = action_getter.pt_get_action(step_number, state, active_head=None,
-                                                                      evaluation=True)
+                action = action_getter.pt_get_action(step_number, state, evaluation=True)
             next_state, reward, life_lost, terminal = env.step(action)
             evaluate_step_number += 1
             episode_steps += 1
@@ -565,12 +369,11 @@ def baseline_evaluate():
         episode_steps = 0
 
         while not terminal:
-            UNCERTAINITY = False
             steps = steps + 1
             if life_lost:
                 action = 1
             else:
-                eps, action, UNCERTAINITY, LCB, safe_LCB, x = action_getter.pt_get_action(int(3e6), state=state, active_head=None,baseline_evaluation = True)
+                action = action_getter.pt_get_action(int(3e6), state=state, baseline_evaluation = True)
             next_state, reward, life_lost, terminal = env.step(action)
 
             evaluate_step_number += 1
@@ -591,7 +394,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/pacman_rpf_0002001399q.pkl',
+                        default='./results/breakout_rpf_0001003413q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -601,14 +404,12 @@ if __name__ == '__main__':
     else:
         device = 'cpu'
     print("running on %s" % device)
-    LCB_constant = 0.1
-
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/ms_pacman.bin',  # gym prefix
+        "GAME": 'roms/breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'pacman_safe_v2_',  # start files with name
+        "NAME": 'breakout_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -616,45 +417,32 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 100000,  # how often to update target network
+        "TARGET_UPDATE": 120000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
-        "EPS_INITIAL": 1.0,  # should be 1
-        "EPS_FINAL": 0.01,  # 0.01 in osband
-        "EPS_EVAL": 0.0,  # 0 in osband, .05 in others....
-        "EPS_ANNEALING_FRAMES": int(3e6),  # this may have been 1e6 in osband
-        #"EPS_ANNEALING_FRAMES": 0,
-        # if it annealing is zero, then it will only use the bootstrap after the first MIN_EXAMPLES_TO_LEARN steps which are random
-        "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e7),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": int(1e7),  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": int(1e6),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
-        "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
-        "RMS_DECAY": 0.95,
-        "RMS_MOMENTUM": 0.0,
-        "RMS_EPSILON": 0.00001,
-        "RMS_CENTERED": True,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
         "N_EPOCHS": 90000,  # Number of episodes to run
         "BATCH_SIZE": 64,  # Batch size to use for learning
         "GAMMA": .99,  # Gamma weight in Q update
-        "PLOT_EVERY_EPISODES": 5,
+        "PLOT_EVERY_EPISODES": 50,
         "CLIP_GRAD": 10,  # Gradient clipping setting
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
+        "SAVE_MEMORY_BUFFER" : False,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(8.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
         "DEAD_AS_END": True,  # do you send finished=true to agent while training when it loses a life
-        "LCB_constant": LCB_constant,
-        "Safety_step_number": 0,
+        "LCB_constant": 0.1,
         "Baseline_Value": "NA"
-
     }
 
     np.random.seed(info["SEED"])
@@ -681,11 +469,6 @@ if __name__ == '__main__':
 
     random_state = np.random.RandomState(info["SEED"])
     action_getter = ActionGetter(n_actions=env.num_actions,
-                                 eps_initial=info['EPS_INITIAL'],
-                                 eps_final=info['EPS_FINAL'],
-                                 eps_final_frame=info['EPS_FINAL_FRAME'],
-                                 eps_annealing_frames=info['EPS_ANNEALING_FRAMES'],
-                                 eps_evaluation=info['EPS_EVAL'],
                                  replay_memory_start_size=info['MIN_HISTORY_TO_LEARN'],
                                  max_steps=info['MAX_STEPS'])
 
@@ -712,18 +495,7 @@ if __name__ == '__main__':
         info['loaded_from'] = args.model_loadpath
         perf = model_dict['perf']
 
-        start_step_number = perf['steps'][-1]
-        perf = {'steps': [],
-                'avg_rewards': [],
-                'episode_step': [],
-                'episode_head': [],
-                'eps_list': [],
-                'episode_loss': [],
-                'episode_reward': [],
-                'episode_times': [],
-                'episode_relative_times': [],
-                'eval_rewards': [],
-                'eval_steps': []}
+
 
     else:
         # create new project
@@ -731,7 +503,6 @@ if __name__ == '__main__':
                 'avg_rewards': [],
                 'episode_step': [],
                 'episode_head': [],
-                'eps_list': [],
                 'episode_loss': [],
                 'episode_reward': [],
                 'episode_times': [],
@@ -783,12 +554,8 @@ if __name__ == '__main__':
 
         safe_net = NetWithPrior(safe_net, prior_net, info['PRIOR_SCALE'])
 
-    '''model_dict = torch.load("./clip/pacman_safe_v2_08/pacman_safe_v2__0004002110q.pkl")
-    policy_net.load_state_dict(model_dict['policy_net_state_dict'])
-    target_net.load_state_dict(model_dict['target_net_state_dict'])
-    '''
     opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
-    #opt.load_state_dict(model_dict['optimizer'])
+
 
     #### safe model ####
     print('safe model from: %s' % args.safe_model_loadpath)
@@ -796,16 +563,6 @@ if __name__ == '__main__':
     safe_model_base_filedir = os.path.split(args.safe_model_loadpath)[0]
     safe_net.load_state_dict(safe_model_dict['policy_net_state_dict'])
 
-    #### safe model ####
-
-    # create optimizer
-    # opt = optim.RMSprop(policy_net.parameters(),
-    #                    lr=info["RMS_LEARNING_RATE"],
-    #                    momentum=info["RMS_MOMENTUM"],
-    #                    eps=info["RMS_EPSILON"],
-    #                    centered=info["RMS_CENTERED"],
-    #                    alpha=info["RMS_DECAY"])
-    #opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
 
 
     if args.model_loadpath is not '':
@@ -825,6 +582,5 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    baseline_evaluate()
-
-    #train(start_step_number, start_last_save)
+    #baseline_evaluate()
+    train(steps_save[len(steps_save)-1], start_last_save)

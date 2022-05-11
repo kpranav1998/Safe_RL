@@ -107,8 +107,9 @@ def handle_checkpoint(last_save, cnt):
                  }
         filename = os.path.abspath(model_base_filepath + "_%010dq.pkl" % cnt)
         buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
-        #replay_memory.save_buffer(buff_filename)
-        #print("Saved Buffer")
+        if(info["SAVE_MEMORY_BUFFER"] == True):
+            replay_memory.save_buffer(buff_filename)
+            print("Saved Buffer")
         save_checkpoint(state, filename)
         # npz will be added
 
@@ -453,6 +454,7 @@ if __name__ == '__main__':
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
+        "SAVE_MEMORY_BUFFER": False,
         "START_TIME": time.time(),
         "MAX_STEPS": int(8e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
