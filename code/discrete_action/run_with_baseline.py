@@ -394,7 +394,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/breakout_rpf_0001003413q.pkl',
+                        default='./breakout_rpf_0001205244q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -407,7 +407,7 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/breakout.bin',  # gym prefix
+        "GAME": './breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'breakout_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
@@ -583,4 +583,4 @@ if __name__ == '__main__':
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
     #baseline_evaluate()
-    train(steps_save[len(steps_save)-1], start_last_save)
+    train(0, start_last_save)

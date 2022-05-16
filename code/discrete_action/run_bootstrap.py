@@ -414,10 +414,10 @@ if __name__ == '__main__':
     print("running on %s" % device)
 
     info = {
-        "GAME":'roms/ms_pacman.bin', # gym prefix
+        "GAME":'roms/breakout.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'pacman_rpf',  # start files with name
+        "NAME": 'breakout_rpf',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -437,8 +437,8 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": int(1e6),  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(1e5),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
         "RMS_DECAY": 0.95,
@@ -451,12 +451,12 @@ if __name__ == '__main__':
         "GAMMA": .99,  # Gamma weight in Q update
         "PLOT_EVERY_EPISODES": 50,
         "CLIP_GRAD": 5,  # Gradient clipping setting
-        "SEED": random.randint(1,100000),
+        "SEED": 14754,#random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "SAVE_MEMORY_BUFFER": False,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(8e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -558,6 +558,7 @@ if __name__ == '__main__':
 
     target_net.load_state_dict(policy_net.state_dict())
     # create optimizer
+
     '''
     opt = optim.RMSprop(policy_net.parameters(),
                         lr=info["RMS_LEARNING_RATE"],
@@ -585,6 +586,5 @@ if __name__ == '__main__':
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
     print(start_step_number)
     train(start_step_number, start_last_save)
-
 
 
