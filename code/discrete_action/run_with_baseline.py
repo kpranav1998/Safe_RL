@@ -394,7 +394,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./breakout_rpf_0001205244q.pkl',
+                        default='./results/breakout_rpf05/breakout_rpf_0000202156q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -407,7 +407,7 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": './breakout.bin',  # gym prefix
+        "GAME": 'roms/breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'breakout_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
@@ -422,7 +422,7 @@ if __name__ == '__main__':
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e6),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
@@ -582,5 +582,5 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    #baseline_evaluate()
-    train(0, start_last_save)
+    baseline_evaluate()
+    #train(0, start_last_save)
