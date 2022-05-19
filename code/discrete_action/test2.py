@@ -16,10 +16,10 @@ def average_plot(l,margin=100):
 
 
 
-reward = average_plot(np.load("./Medium/seed_1/reward.npy"),200)
-reward_safe = average_plot(np.load("./reward_safe.npy"),200)
+reward = average_plot(np.load("./reward.npy"),100)
+reward_safe = average_plot(np.load("./reward_safe.npy"),100)
 
-steps = np.load("./Medium/seed_1/steps.npy").tolist()[0:len(reward)]
+steps = np.load("./steps.npy").tolist()[0:len(reward)]
 steps_safe = np.load("./steps_safe.npy").tolist()[0:len(reward_safe)]
 
 i = 0
@@ -41,12 +41,12 @@ x= [70]
 
 
 plt.figure()
-plt.plot(reward)
-#plt.axhline(y=70, color='r', linestyle='-')
-#plt.fill_between(steps,70 + 9, 70 - 9,
-#                 alpha=0.2, color='g')
+plt.plot(steps,reward)
+plt.axhline(y=147.54, color='r', linestyle='-')
+plt.fill_between(steps,147.54 + 54, 147.54 - 54,
+                 alpha=0.2, color='g')
 
-#plt.plot(steps_safe,reward_safe)
+plt.plot(steps_safe,reward_safe)
 
 plt.show()
 
