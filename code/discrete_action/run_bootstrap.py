@@ -28,6 +28,14 @@ loss_save = []
 steps = []
 steps2 = []
 
+reward_save = np.load("./results/seaquest_rpf00/reward.npy").tolist()
+steps_save = np.load("./results/seaquest_rpf00/steps.npy").tolist()
+i = 0
+while(steps_save[i] < int(2.7e6)):
+    i = i + 1
+reward_save = reward_save[0:i]
+steps_save = steps_save[0:i]
+
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
     print('len:', len(list))
@@ -106,7 +114,7 @@ def handle_checkpoint(last_save, cnt):
                  'perf': perf,
                  }
         filename = os.path.abspath(model_base_filepath + "_%010dq.pkl" % cnt)
-        buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
+        buff_filename = os.path.abspath(model_base_filepath + "buffer")
         if(info["SAVE_MEMORY_BUFFER"] == True):
             replay_memory.save_buffer(buff_filename)
             print("Saved Buffer")
@@ -257,6 +265,7 @@ def train(step_number, last_save):
     """Contains the training and evaluation loops"""
     epoch_num = len(perf['steps'])
     total_steps = 0
+    start_step_number = step_number
 
     while step_number < info['MAX_STEPS']:
         ########################
@@ -298,14 +307,14 @@ def train(step_number, last_save):
                 state = next_state
                 total_steps += 1
 
-                if step_number % info['LEARN_EVERY_STEPS'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
+                if step_number % info['LEARN_EVERY_STEPS'] == 0 and step_number -start_step_number  > info['MIN_HISTORY_TO_LEARN']:
                     _states, _actions, _rewards, _next_states, _terminal_flags, _masks = replay_memory.get_minibatch(
                         info['BATCH_SIZE'])
                     ptloss, uncertainity = ptlearn(_states, _actions, _rewards, _next_states, _terminal_flags, _masks)
                     episode_uncertainity.append(uncertainity)
                     episode_loss.append(ptloss)
                     ptloss_list.append(ptloss)
-                if step_number % info['TARGET_UPDATE'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
+                if step_number % info['TARGET_UPDATE'] == 0 and step_number - start_step_number > info['MIN_HISTORY_TO_LEARN']:
                     print("++++++++++++++++++++++++++++++++++++++++++++++++")
                     print('updating target network at %s' % step_number)
                     target_net.load_state_dict(policy_net.state_dict())
@@ -414,10 +423,10 @@ if __name__ == '__main__':
     print("running on %s" % device)
 
     info = {
-        "GAME":'roms/breakout.bin', # gym prefix
+        "GAME":'./seaquest.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'breakout_rpf',  # start files with name
+        "NAME": 'seaquest_rpf',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -426,7 +435,7 @@ if __name__ == '__main__':
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
         "TARGET_UPDATE": 10000,  # how often to update target network
-        "MIN_HISTORY_TO_LEARN": 50000,  # in environment frames
+        "MIN_HISTORY_TO_LEARN": 100,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
@@ -454,9 +463,9 @@ if __name__ == '__main__':
         "SEED": 14754,#random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
-        "SAVE_MEMORY_BUFFER": False,
+        "SAVE_MEMORY_BUFFER": True,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(25e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -568,6 +577,11 @@ if __name__ == '__main__':
                         alpha=info["RMS_DECAY"])
     '''
     opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
+    model_dict = torch.load("./results/seaquest_rpf00/seaquest_rpf_0002717017q.pkl")
+    policy_net.load_state_dict(model_dict['policy_net_state_dict'])
+    target_net.load_state_dict(model_dict['target_net_state_dict'])
+    opt.load_state_dict(model_dict['optimizer'])
+
 
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
@@ -585,6 +599,6 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
     print(start_step_number)
-    train(start_step_number, start_last_save)
+    train(steps_save[len(steps_save)-1], start_last_save)
 
 

@@ -24,8 +24,23 @@ import random
 
 reward_save = []
 steps_save = []
+LCB_Diff = []
 
-
+def average_plot(list, save_path, y_label, margin=50):
+    list = np.asarray(list)
+    print('len:', len(list))
+    avg_list = []
+    for i in range(list.shape[0] - margin):
+        temp = 0
+        for j in range(margin):
+            temp = temp + list[i + j]
+        temp = np.float32(temp) / margin
+        avg_list.append(temp)
+    avg_list = np.asarray(avg_list, dtype=np.float32)
+    plt.figure()
+    plt.ylabel(y_label)
+    plt.plot(avg_list, color='r')
+    plt.savefig(save_path + '.png')
 
 def rolling_average(a, n=5):
     if n == 0:
@@ -89,7 +104,7 @@ def handle_checkpoint(last_save, cnt):
         filename = os.path.abspath(model_base_filepath + "_%010dq.pkl" % cnt)
         save_checkpoint(state, filename)
         # npz will be added
-        buff_filename = os.path.abspath(model_base_filepath + "_%010dq_train_buffer" % cnt)
+        buff_filename = os.path.abspath(model_base_filepath + "buffer")
         if(info["SAVE_MEMORY_BUFFER"] == True):
             replay_memory.save_buffer(buff_filename)
         print("finished checkpoint", time.time() - st)
@@ -120,7 +135,7 @@ class ActionGetter:
             acts = [torch.argmax(vals[h], dim=1).item() for h in range(info['N_ENSEMBLE'])]
             data = Counter(acts)
             action = data.most_common(1)[0][0]
-            return action
+            return action,0
 
         elif (baseline_evaluation == True):
             safe_vals = safe_net(state, None)
@@ -129,7 +144,7 @@ class ActionGetter:
             safe_std_val = torch.std(safe_vals, axis=0)
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
             safe_action = torch.argmax(safe_LCB).item()
-            return safe_action
+            return safe_action,0
 
         elif(step_number < self.replay_memory_start_size):
             safe_vals = safe_net(state, None)
@@ -138,7 +153,7 @@ class ActionGetter:
             safe_std_val = torch.std(safe_vals, axis=0)
             safe_LCB = safe_mean_val - info["LCB_constant"] * safe_std_val
             safe_action = torch.argmax(safe_LCB).item()
-            return safe_action
+            return safe_action,0
 
         else:
             vals = policy_net(state, None)
@@ -160,7 +175,9 @@ class ActionGetter:
             if(LCB_value < safe_LCB_value):
                 action = safe_action
 
-            return action
+
+
+            return action,LCB_value-safe_LCB_value
 
 def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
     states = torch.Tensor(states.astype(np.float) / info['NORM_BY']).to(info['DEVICE'])
@@ -210,6 +227,7 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
 
 def train(step_number, last_save):
     """Contains the training and evaluation loops"""
+    start_step_number = step_number
     epoch_num = len(perf['steps'])
     while step_number < info['MAX_STEPS']:
         ########################
@@ -233,12 +251,14 @@ def train(step_number, last_save):
             episode_reward_sum = 0
             episode_steps = 0
             episode_loss = []
+            episode_LCB_Diff = []
 
             while not terminal:
                 if life_lost:
                     action = 1
                 else:
-                    action = action_getter.pt_get_action(step_number,state=state)
+                    action,lcb_diff = action_getter.pt_get_action(step_number,state=state)
+                    episode_LCB_Diff.append(lcb_diff)
 
                 episode_steps = episode_steps + 1
 
@@ -255,23 +275,27 @@ def train(step_number, last_save):
                 state = next_state
 
 
-                if step_number % info['LEARN_EVERY_STEPS'] == 0 and (step_number) > info['MIN_HISTORY_TO_LEARN']:
+                if step_number % info['LEARN_EVERY_STEPS'] == 0 and (step_number -start_step_number) > info['MIN_HISTORY_TO_LEARN']:
                     _states, _actions, _rewards, _next_states, _terminal_flags, _masks = replay_memory.get_minibatch(
                         info['BATCH_SIZE'])
 
                     ptloss = ptlearn(_states, _actions, _rewards, _next_states,_terminal_flags, _masks)
                     episode_loss.append(ptloss)
                     ptloss_list.append(ptloss)
-                if step_number % info['TARGET_UPDATE'] == 0 and step_number > info['MIN_HISTORY_TO_LEARN']:
+                if step_number % info['TARGET_UPDATE'] == 0 and step_number -start_step_number > info['MIN_HISTORY_TO_LEARN']:
                     print("++++++++++++++++++++++++++++++++++++++++++++++++")
                     print('updating target network at %s' % step_number)
                     target_net.load_state_dict(policy_net.state_dict())
                     np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
                     np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
+                    np.save(os.path.join(model_base_filedir, 'LCB_diff.npy'), LCB_Diff)
+                    average_plot(LCB_Diff, os.path.join(model_base_filedir, 'LCB_Diff'), 'LCB_Diff')
 
-            if (step_number > info["MIN_HISTORY_TO_LEARN"]):
+
+            if (step_number -start_step_number > info["MIN_HISTORY_TO_LEARN"]):
                 steps_save.append(step_number)
                 reward_save.append(episode_reward_sum)
+                LCB_Diff.append(np.mean(episode_LCB_Diff))
 
             #print(episode_reward_sum)
             et = time.time()
@@ -299,6 +323,9 @@ def train(step_number, last_save):
         perf['eval_steps'].append(step_number)
         matplotlib_plot_all(perf)
 
+    np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
+    np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
+    np.save(os.path.join(model_base_filedir, 'LCB_diff.npy'), LCB_Diff)
 
 def evaluate(step_number):
     print("""
@@ -321,7 +348,7 @@ def evaluate(step_number):
             if life_lost:
                 action = 1
             else:
-                action = action_getter.pt_get_action(step_number, state, evaluation=True)
+                action,_ = action_getter.pt_get_action(step_number, state, evaluation=True)
             next_state, reward, life_lost, terminal = env.step(action)
             evaluate_step_number += 1
             episode_steps += 1
@@ -373,7 +400,7 @@ def baseline_evaluate():
             if life_lost:
                 action = 1
             else:
-                action = action_getter.pt_get_action(int(3e6), state=state, baseline_evaluation = True)
+                action,_ = action_getter.pt_get_action(int(3e6), state=state, baseline_evaluation = True)
             next_state, reward, life_lost, terminal = env.step(action)
 
             evaluate_step_number += 1
@@ -394,7 +421,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
     parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/breakout_rpf05/breakout_rpf_0000202156q.pkl',
+                        default='./results/seaquest_rpf_0002515430q.pkl',
                         help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
@@ -407,9 +434,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/breakout.bin',  # gym prefix
+        "GAME": 'roms/seaquest.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'breakout_safe_v2_',  # start files with name
+        "NAME": 'seaquest_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -417,13 +444,13 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 120000,  # how often to update target network
+        "TARGET_UPDATE": 300000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
-        "EVAL_FREQUENCY": int(1e6),  # how often to run evaluation episodes
+        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
+        "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
         "N_EPOCHS": 90000,  # Number of episodes to run
@@ -436,7 +463,7 @@ if __name__ == '__main__':
         "NETWORK_INPUT_SIZE": (84, 84),
         "SAVE_MEMORY_BUFFER" : False,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(15e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(30.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -564,7 +591,6 @@ if __name__ == '__main__':
     safe_net.load_state_dict(safe_model_dict['policy_net_state_dict'])
 
 
-
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
         # TODO - what about target net update cnt
@@ -582,5 +608,6 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
 
-    baseline_evaluate()
-    #train(0, start_last_save)
+    #baseline_evaluate()
+    train(0, start_last_save)
+    #train(steps_save[len(steps_save) - 1], start_last_save)

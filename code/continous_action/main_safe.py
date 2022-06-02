@@ -20,7 +20,7 @@ parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Pend_1307.902510589936.pkl")
+parser.add_argument('--safe_path',type=str,default="../input/mujoco-test/Pend_1307.902510589936.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(5e5), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(1e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -123,7 +123,7 @@ def average_plot(list,y_label,save_path, margin=3):
 
 
 
-
+'''
 episodes = []
 
 for i in range(50):
@@ -232,8 +232,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 500 == 0):
+    if(i_episode % 20 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()
-'''
