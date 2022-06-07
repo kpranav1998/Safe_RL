@@ -167,9 +167,6 @@ class SAC_Safe(object):
             alpha_loss = torch.tensor(0.).to(self.device)
             alpha_tlogs = torch.tensor(self.alpha)  # For TensorboardX logs
 
-        if updates > int(1e5):
-            self.target_update_interval = 3
-
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
 

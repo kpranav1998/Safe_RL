@@ -20,7 +20,7 @@ parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="../input/mujoco-test/Pend_1307.902510589936.pkl")
+parser.add_argument('--safe_path',type=str,default="../input/mujoco-test2/Pend_569.1632945845348.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -39,7 +39,7 @@ parser.add_argument('--alpha', type=float, default=0.2, metavar='G',
                             term against the reward (default: 0.2)')
 parser.add_argument('--automatic_entropy_tuning', type=bool, default=False, metavar='G',
                     help='Automaically adjust α (default: False)')
-parser.add_argument('--seed', type=int, default=39322 , metavar='N',
+parser.add_argument('--seed', type=int, default=86624 , metavar='N',
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
@@ -94,12 +94,12 @@ memory = ReplayMemory(args.replay_size, args.seed)
 
 
 run_num = 0
-reward_list = np.load("../input/mujoco-test/reward_safe3.npy").tolist()
-uncertainity_list = np.load("../input/mujoco-test/uncertainity_safe3.npy",allow_pickle=True).tolist()
-steps = np.load("../input/mujoco-test/steps_safe3.npy").tolist()
+reward_list = np.load("../input/mujoco-test2/reward_safe2.npy").tolist()
+uncertainity_list = np.load("../input/mujoco-test2/uncertainity_safe2.npy",allow_pickle=True).tolist()
+steps = np.load("../input/mujoco-test2/steps_safe2.npy").tolist()
 
 i = 0
-while(steps[i] < 845451):
+while(steps[i] < 930033):
     i = i + 1
 
 reward_list = reward_list[0:i]
@@ -107,7 +107,7 @@ steps = steps[0:i]
 uncertainity_list = uncertainity_list[0:i]
 
 
-total_numsteps = 845451
+total_numsteps = 930033
 updates = 0
 
 
@@ -236,7 +236,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 50 == 0):
+    if(i_episode % 20 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

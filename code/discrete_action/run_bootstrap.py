@@ -28,13 +28,7 @@ loss_save = []
 steps = []
 steps2 = []
 
-reward_save = np.load("./results/seaquest_rpf00/reward.npy").tolist()
-steps_save = np.load("./results/seaquest_rpf00/steps.npy").tolist()
-i = 0
-while(steps_save[i] < int(2.7e6)):
-    i = i + 1
-reward_save = reward_save[0:i]
-steps_save = steps_save[0:i]
+
 
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
@@ -435,7 +429,7 @@ if __name__ == '__main__':
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
         "TARGET_UPDATE": 10000,  # how often to update target network
-        "MIN_HISTORY_TO_LEARN": 100,  # in environment frames
+        "MIN_HISTORY_TO_LEARN": 50000,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "EPS_INITIAL": 1.0,  # should be 1
         "EPS_FINAL": 0.01,  # 0.01 in osband
@@ -446,7 +440,7 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e5),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
@@ -460,12 +454,12 @@ if __name__ == '__main__':
         "GAMMA": .99,  # Gamma weight in Q update
         "PLOT_EVERY_EPISODES": 50,
         "CLIP_GRAD": 5,  # Gradient clipping setting
-        "SEED": 14754,#random.randint(1,100000),
+        "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
         "SAVE_MEMORY_BUFFER": True,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(25e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(30.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -577,11 +571,6 @@ if __name__ == '__main__':
                         alpha=info["RMS_DECAY"])
     '''
     opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
-    model_dict = torch.load("./results/seaquest_rpf00/seaquest_rpf_0002717017q.pkl")
-    policy_net.load_state_dict(model_dict['policy_net_state_dict'])
-    target_net.load_state_dict(model_dict['target_net_state_dict'])
-    opt.load_state_dict(model_dict['optimizer'])
-
 
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
@@ -599,6 +588,6 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
     print(start_step_number)
-    train(steps_save[len(steps_save)-1], start_last_save)
+    train(0, start_last_save)
 
 
