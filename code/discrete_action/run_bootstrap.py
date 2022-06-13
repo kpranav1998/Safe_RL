@@ -417,7 +417,7 @@ if __name__ == '__main__':
     print("running on %s" % device)
 
     info = {
-        "GAME":'./seaquest.bin', # gym prefix
+        "GAME":'roms/seaquest.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
         "NAME": 'seaquest_rpf',  # start files with name
@@ -457,7 +457,7 @@ if __name__ == '__main__':
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
-        "SAVE_MEMORY_BUFFER": True,
+        "SAVE_MEMORY_BUFFER": False,
         "START_TIME": time.time(),
         "MAX_STEPS": int(30.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps

@@ -26,6 +26,7 @@ reward_save = []
 steps_save = []
 LCB_Diff = []
 
+
 def average_plot(list, save_path, y_label, margin=50):
     list = np.asarray(list)
     print('len:', len(list))
@@ -296,6 +297,9 @@ def train(step_number, last_save):
                 steps_save.append(step_number)
                 reward_save.append(episode_reward_sum)
                 LCB_Diff.append(np.mean(episode_LCB_Diff))
+                np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
+                np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
+                np.save(os.path.join(model_base_filedir, 'LCB_diff.npy'), LCB_Diff)
 
             #print(episode_reward_sum)
             et = time.time()
@@ -323,9 +327,6 @@ def train(step_number, last_save):
         perf['eval_steps'].append(step_number)
         matplotlib_plot_all(perf)
 
-    np.save(os.path.join(model_base_filedir, 'reward.npy'), reward_save)
-    np.save(os.path.join(model_base_filedir, 'steps.npy'), steps_save)
-    np.save(os.path.join(model_base_filedir, 'LCB_diff.npy'), LCB_Diff)
 
 def evaluate(step_number):
     print("""
@@ -420,9 +421,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
-    parser.add_argument('-s', '--safe_model_loadpath',
-                        default='./results/seaquest_rpf_0002515430q.pkl',
-                        help='.pkl model file full path')
+    parser.add_argument('-s', '--safe_model_loadpath',default='./results/freeway_25.pkl', help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
     args = parser.parse_args()
@@ -434,9 +433,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/seaquest.bin',  # gym prefix
+        "GAME": 'roms/freeway.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'seaquest_safe_v2_',  # start files with name
+        "NAME": 'freeway_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -444,7 +443,7 @@ if __name__ == '__main__':
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 300000,  # how often to update target network
+        "TARGET_UPDATE": 90000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
@@ -463,7 +462,7 @@ if __name__ == '__main__':
         "NETWORK_INPUT_SIZE": (84, 84),
         "SAVE_MEMORY_BUFFER" : False,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(30.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(25.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -508,6 +507,7 @@ if __name__ == '__main__':
         info['DEVICE'] = device
         # set a new random seed
         info["SEED"] = model_dict['cnt']
+        info["SAVE_MEMORY_BUFFER"] = False
         #model_base_filedir = os.path.split(args.model_loadpath)[0]
         run_num = 0
         model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
@@ -518,9 +518,13 @@ if __name__ == '__main__':
         print("----------------------------------------------")
         print("starting NEW project: %s" % model_base_filedir)
 
-        start_step_number = start_last_save = model_dict['cnt']
+        start_step_number = steps_save[len(steps_save) -1]
         info['loaded_from'] = args.model_loadpath
         perf = model_dict['perf']
+        
+
+
+        
 
 
 
@@ -537,7 +541,7 @@ if __name__ == '__main__':
                 'eval_rewards': [],
                 'eval_steps': []}
 
-        start_step_number = 0#steps_save[len(steps_save) -1]
+        start_step_number = 0
         start_last_save = 0
         # make new directory for this run in the case that there is already a
         # project with this name
@@ -554,6 +558,8 @@ if __name__ == '__main__':
     write_info_file(info, model_base_filepath, start_step_number)
     heads = list(range(info['N_ENSEMBLE']))
     seed_everything(info["SEED"])
+
+
 
     policy_net = EnsembleNet(n_ensemble=info['N_ENSEMBLE'],
                              n_actions=env.num_actions,
@@ -590,24 +596,20 @@ if __name__ == '__main__':
     safe_model_base_filedir = os.path.split(args.safe_model_loadpath)[0]
     safe_net.load_state_dict(safe_model_dict['policy_net_state_dict'])
 
-
+    
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
         # TODO - what about target net update cnt
         target_net.load_state_dict(model_dict['target_net_state_dict'])
         policy_net.load_state_dict(model_dict['policy_net_state_dict'])
 
-        #opt.load_state_dict(model_dict['optimizer'])
+        opt.load_state_dict(model_dict['optimizer'])
+        #replay_memory.load_buffer(args.buffer_loadpath)
         print("loaded model state_dicts")
-        if args.buffer_loadpath == '':
-            args.buffer_loadpath = args.model_loadpath.replace('.pkl', '_train_buffer.npz')
-            print("auto loading buffer from:%s" % args.buffer_loadpath)
-            try:
-                replay_memory.load_buffer(args.buffer_loadpath)
-            except Exception as e:
-                print(e)
-                print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
+        
 
     #baseline_evaluate()
     train(0, start_last_save)
-    #train(steps_save[len(steps_save) - 1], start_last_save)
+    '''print(info["SAVE_MEMORY_BUFFER"])
+                print(start_step_number)
+                train(start_step_number, start_step_number)'''

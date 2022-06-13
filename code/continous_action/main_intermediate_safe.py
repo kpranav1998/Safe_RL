@@ -16,11 +16,11 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
+parser.add_argument('--env-name', default="InvertedPendulum-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="../input/mujoco-test2/Pend_569.1632945845348.pkl")
+parser.add_argument('--safe_path',type=str,default="../input/mujoco-test2/model_130.0.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -99,7 +99,7 @@ uncertainity_list = np.load("../input/mujoco-test2/uncertainity_safe2.npy",allow
 steps = np.load("../input/mujoco-test2/steps_safe2.npy").tolist()
 
 i = 0
-while(steps[i] < 930033):
+while(steps[i] < 900600):
     i = i + 1
 
 reward_list = reward_list[0:i]
