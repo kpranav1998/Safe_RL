@@ -421,7 +421,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
-    parser.add_argument('-s', '--safe_model_loadpath',default='./results/freeway_25.pkl', help='.pkl model file full path')
+    parser.add_argument('-s', '--safe_model_loadpath',default='./results/pong_rpf_0002025881q.pkl', help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
     args = parser.parse_args()
@@ -433,22 +433,22 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/freeway.bin',  # gym prefix
+        "GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'freeway_safe_v2_',  # start files with name
+        "NAME": 'pong_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
-        "PRIOR_SCALE": 3,  # what to scale prior by
+        "PRIOR_SCALE": 6,  # what to scale prior by
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 90000,  # how often to update target network
+        "TARGET_UPDATE": 100000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(3e5),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
@@ -460,9 +460,9 @@ if __name__ == '__main__':
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
-        "SAVE_MEMORY_BUFFER" : False,
+        "SAVE_MEMORY_BUFFER" : True,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(25.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(16.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
