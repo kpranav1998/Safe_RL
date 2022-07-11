@@ -626,6 +626,6 @@ if __name__ == '__main__':
         print("loaded model state_dicts")
         
 
-    #baseline_evaluate()
-    train(0, start_last_save)
+    baseline_evaluate()
+    #train(0, start_last_save)
     #train(steps_save[len(steps_save) - 1], start_last_save)
