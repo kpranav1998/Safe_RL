@@ -1,5 +1,7 @@
 from __future__ import print_function
 import matplotlib
+import sys
+
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -27,6 +29,23 @@ reward_save = []
 loss_save = []
 steps = []
 steps2 = []
+
+
+reward_save = []
+steps_save = []
+
+reward_save = np.load("./results/pacman_rpf03/reward.npy").tolist()
+steps = np.load("./results/pacman_rpf03/steps.npy").tolist()
+
+
+
+i = 0
+while(steps[i] < int(6e6) and i < len(steps) - 1):
+      i = i + 1
+
+reward_save = reward_save[0:i] 
+steps = steps[0:i] 
+#LCB_Diff = LCB_Diff[0:i]
 
 
 
@@ -406,7 +425,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
-    parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
+    parser.add_argument('-l', '--model_loadpath', default='./results/pacman_rpf03/pacman_rpf_0006001233q.pkl', help='.pkl model file full path')
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
     args = parser.parse_args()
     if args.cuda:
@@ -417,14 +436,14 @@ if __name__ == '__main__':
     print("running on %s" % device)
 
     info = {
-        "GAME":'roms/freeway.bin', # gym prefix
+        "GAME":'roms/ms_pacman.bin', # gym prefix
         #"GAME": 'roms/pong.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'freeway_rpf',  # start files with name
+        "NAME": 'pacman_rpf',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
-        "PRIOR_SCALE": 3,  # what to scale prior by
+        "PRIOR_SCALE": 5,  # what to scale prior by
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
@@ -440,7 +459,7 @@ if __name__ == '__main__':
         "EPS_FINAL_FRAME": 0.01,
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(2e6),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(1e5),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "RMS_LEARNING_RATE": 0.00025,  # according to paper = 0.00025
@@ -452,14 +471,14 @@ if __name__ == '__main__':
         "N_EPOCHS": 90000,  # Number of episodes to run
         "BATCH_SIZE": 64,  # Batch size to use for learning
         "GAMMA": .99,  # Gamma weight in Q update
-        "PLOT_EVERY_EPISODES": 50,
+        "PLOT_EVERY_EPISODES": 10000,
         "CLIP_GRAD": 5,  # Gradient clipping setting
         "SEED": random.randint(1,100000),
         "RANDOM_HEAD": -1,  # just used in plotting as demarcation
         "NETWORK_INPUT_SIZE": (84, 84),
-        "SAVE_MEMORY_BUFFER": False,
+        "SAVE_MEMORY_BUFFER": True,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(16.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(11.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -498,12 +517,26 @@ if __name__ == '__main__':
     if args.model_loadpath != '':
         # load data from loadpath - save model load for later. we need some of
         # these parameters to setup other things
+        
+        run_num = 0
+        model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
+        while os.path.exists(model_base_filedir):
+            run_num += 1
+            model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
+        os.makedirs(model_base_filedir)
+        print("----------------------------------------------")
+        print("starting NEW project: %s" % model_base_filedir)
+
+        
         print('loading model from: %s' % args.model_loadpath)
         model_dict = torch.load(args.model_loadpath)
         info = model_dict['info']
         info['DEVICE'] = device
         # set a new random seed
         info["SEED"] = model_dict['cnt']
+        info["MAX_STEPS"] = int(11.01e6)
+        info["SAVE_MEMORY_BUFFER"] = True
+
         model_base_filedir = os.path.split(args.model_loadpath)[0]
         start_step_number = start_last_save = model_dict['cnt']
         info['loaded_from'] = args.model_loadpath
@@ -588,6 +621,6 @@ if __name__ == '__main__':
                 print(e)
                 print('not able to load from buffer: %s. exit() to continue with empty buffer' % args.buffer_loadpath)
     print(start_step_number)
-    train(0, start_last_save)
+    train(start_step_number, start_last_save)
 
 

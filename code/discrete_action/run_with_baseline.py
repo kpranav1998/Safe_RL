@@ -20,11 +20,35 @@ from env import Environment
 from replay import ReplayMemory
 import config
 import random
+import sys
+import warnings
+
+if not sys.warnoptions:
+    warnings.simplefilter("ignore")
 
 
-reward_save = []
-steps_save = []
-LCB_Diff = []
+LOAD_MODEL = False
+if(LOAD_MODEL == False):
+    reward_save = []
+    steps_save = []
+    LCB_Diff = []
+
+else:
+
+
+    reward_save = np.load("./clip/pong_safe_v2_14/reward.npy").tolist()
+    steps_save = np.load("./clip/pong_safe_v2_14/steps.npy").tolist()
+    LCB_Diff = np.load("./clip/pong_safe_v2_14/LCB_diff.npy").tolist()
+
+
+
+    i = 0
+    while(steps_save[i] < int(1.8e6) and i < len(steps_save) - 1):
+          i = i + 1
+
+    reward_save = reward_save[0:i] 
+    steps_save = steps_save[0:i] 
+    LCB_Diff = LCB_Diff[0:i] 
 
 
 def average_plot(list, save_path, y_label, margin=50):
@@ -229,6 +253,7 @@ def ptlearn(states, actions, rewards, next_states, terminal_flags, masks):
 def train(step_number, last_save):
     """Contains the training and evaluation loops"""
     start_step_number = step_number
+    print(start_step_number)
     epoch_num = len(perf['steps'])
     while step_number < info['MAX_STEPS']:
         ########################
@@ -421,7 +446,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
-    parser.add_argument('-s', '--safe_model_loadpath',default='./results/pong_rpf_0002025881q.pkl', help='.pkl model file full path')
+    parser.add_argument('-s', '--safe_model_loadpath',default='./results/enduro_rpf00/enduro_rpf_0001775667q.pkl', help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
     args = parser.parse_args()
@@ -433,22 +458,22 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/pong.bin',  # gym prefix
+        "GAME": 'roms/enduro.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'pong_safe_v2_',  # start files with name
+        "NAME": 'enduro_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
-        "PRIOR_SCALE": 6,  # what to scale prior by
+        "PRIOR_SCALE": 3,  # what to scale prior by
         "N_ENSEMBLE": 5,  # number of bootstrap heads to use. when 1, this is a normal dqn
         "LEARN_EVERY_STEPS": 4,  # updates every 4 steps in osband
         "BERNOULLI_PROBABILITY": 0.9,# Probability of experience to go to each head - if 1, every experience goes to every head
-        "TARGET_UPDATE": 100000,  # how often to update target network
+        "TARGET_UPDATE": 50000,  # how often to update target network
         "MIN_HISTORY_TO_LEARN": 64,  # in environment frames
         "NORM_BY": 255.,  # divide the float(of uint) by this number to normalize - max val of data is 255
         "NUM_EVAL_EPISODES": 1,  # num examples to average in eval
         "BUFFER_SIZE": int(1e6),  # Buffer size for experience replay
-        "CHECKPOINT_EVERY_STEPS": int(3e5),  # how often to write pkl of model and npz of data buffer
+        "CHECKPOINT_EVERY_STEPS": int(1e6),  # how often to write pkl of model and npz of data buffer
         "EVAL_FREQUENCY": int(1e9),  # how often to run evaluation episodes
         "ADAM_LEARNING_RATE": 6.25e-5,
         "HISTORY_SIZE": 4,  # how many past frames to use for state input
@@ -462,7 +487,7 @@ if __name__ == '__main__':
         "NETWORK_INPUT_SIZE": (84, 84),
         "SAVE_MEMORY_BUFFER" : False,
         "START_TIME": time.time(),
-        "MAX_STEPS": int(16.01e6),  # 50e6 steps is 200e6 frames
+        "MAX_STEPS": int(11.01e6),  # 50e6 steps is 200e6 frames
         "MAX_EPISODE_STEPS": 27000,  # Orig dqn give 18k steps, Rainbow seems to give 27k steps
         "FRAME_SKIP": 4,  # deterministic frame skips to match deepmind
         "MAX_NO_OP_FRAMES": 30,  # random number of noops applied to beginning of each episode
@@ -505,9 +530,9 @@ if __name__ == '__main__':
         model_dict = torch.load(args.model_loadpath)
         info = model_dict['info']
         info['DEVICE'] = device
+        
         # set a new random seed
-        info["SEED"] = model_dict['cnt']
-        info["SAVE_MEMORY_BUFFER"] = False
+       
         #model_base_filedir = os.path.split(args.model_loadpath)[0]
         run_num = 0
         model_base_filedir = os.path.join(config.model_savedir, info['NAME'] + '%02d' % run_num)
@@ -518,13 +543,9 @@ if __name__ == '__main__':
         print("----------------------------------------------")
         print("starting NEW project: %s" % model_base_filedir)
 
-        start_step_number = steps_save[len(steps_save) -1]
+        start_step_number = start_last_save = model_dict['cnt']
         info['loaded_from'] = args.model_loadpath
         perf = model_dict['perf']
-        
-
-
-        
 
 
 
@@ -541,7 +562,7 @@ if __name__ == '__main__':
                 'eval_rewards': [],
                 'eval_steps': []}
 
-        start_step_number = 0
+        start_step_number = 0#steps_save[len(steps_save) -1]
         start_last_save = 0
         # make new directory for this run in the case that there is already a
         # project with this name
@@ -558,8 +579,6 @@ if __name__ == '__main__':
     write_info_file(info, model_base_filepath, start_step_number)
     heads = list(range(info['N_ENSEMBLE']))
     seed_everything(info["SEED"])
-
-
 
     policy_net = EnsembleNet(n_ensemble=info['N_ENSEMBLE'],
                              n_actions=env.num_actions,
@@ -585,7 +604,7 @@ if __name__ == '__main__':
         policy_net = NetWithPrior(policy_net, prior_net, info['PRIOR_SCALE'])
         target_net = NetWithPrior(target_net, prior_net, info['PRIOR_SCALE'])
 
-        safe_net = NetWithPrior(safe_net, prior_net, info['PRIOR_SCALE'])
+        safe_net = NetWithPrior(safe_net, prior_net,  info['PRIOR_SCALE'])
 
     opt = optim.Adam(policy_net.parameters(), lr=info['ADAM_LEARNING_RATE'])
 
@@ -595,7 +614,6 @@ if __name__ == '__main__':
     safe_model_dict = torch.load(args.safe_model_loadpath)
     safe_model_base_filedir = os.path.split(args.safe_model_loadpath)[0]
     safe_net.load_state_dict(safe_model_dict['policy_net_state_dict'])
-
     
     if args.model_loadpath is not '':
         # what about random states - they will be wrong now???
@@ -604,12 +622,10 @@ if __name__ == '__main__':
         policy_net.load_state_dict(model_dict['policy_net_state_dict'])
 
         opt.load_state_dict(model_dict['optimizer'])
-        #replay_memory.load_buffer(args.buffer_loadpath)
+        replay_memory.load_buffer(args.buffer_loadpath)
         print("loaded model state_dicts")
         
 
     #baseline_evaluate()
     train(0, start_last_save)
-    '''print(info["SAVE_MEMORY_BUFFER"])
-                print(start_step_number)
-                train(start_step_number, start_step_number)'''
+    #train(steps_save[len(steps_save) - 1], start_last_save)
