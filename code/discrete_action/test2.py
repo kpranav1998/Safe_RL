@@ -18,21 +18,18 @@ def average_plot(l,margin=100):
 
 
 
-reward1 = average_plot(np.load("./seed_1/reward.npy"),200
+reward1 = average_plot(np.load("./InvertedPendulum/Good/seed_1/reward.npy"),20
                        )
-steps1 = np.load("./seed_1/steps.npy").tolist()[0:len(reward1)]
+steps1 = np.load("./InvertedPendulum/Good/seed_1/steps.npy").tolist()[0:len(reward1)]
 
-reward2 = average_plot(np.load("./seed_3/reward.npy"),200
+reward2 = average_plot(np.load("./InvertedPendulum/Good/seed_2/reward.npy"),20
                        )
-steps2 = np.load("./seed_3/steps.npy").tolist()[0:len(reward2)]
+steps2 = np.load("./InvertedPendulum/Good/seed_2/steps.npy").tolist()[0:len(reward2)]
 
-reward3 = average_plot(np.load("./seed_4/reward.npy"),200
+reward3 = average_plot(np.load("./InvertedPendulum/Good/seed_3/reward.npy"),20
                        )
-steps3= np.load("./seed_4/steps.npy").tolist()[0:len(reward3)]
+steps3= np.load("./InvertedPendulum/Good/seed_3/steps.npy").tolist()[0:len(reward3)]
 
-reward4 = average_plot(np.load("./Real_seed_1/reward.npy"),200
-                       )
-steps4= np.load("./Real_seed_1/steps.npy").tolist()[0:len(reward4)]
 
 
 
@@ -41,24 +38,24 @@ steps4= np.load("./Real_seed_1/steps.npy").tolist()[0:len(reward4)]
 
 
 plt.figure()
+plt.title("InvertedPendulum Good")
 plt.plot(steps1,reward1)
 plt.plot(steps2,reward2)
 plt.plot(steps3,reward3)
-plt.plot(steps4,reward4)
 
 #plt.plot(real_steps1,real_reward1)
 #plt.plot(real_steps2,real_reward2)
 
 
-plt.axhline(y=0, color='r', linestyle='-')
 #plt.axhline(y=1500, color='r', linestyle='-')
 #plt.fill_between(steps1, 15, 11, alpha= 0.2,color='r')
-plt.legend(["seed_1","seed_3","seed_4","Real_seed_1"], loc ="best")
+plt.legend(["seed_1","seed_2","seed_3"], loc ="best")
 
 #
 #plt.plot(steps,rewards)
 
-plt.show()
+#plt.show()
+plt.savefig("./InvertedPendulum_Good.png")
 
 
 
