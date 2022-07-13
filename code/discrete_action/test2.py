@@ -18,10 +18,10 @@ def average_plot(l,margin=100):
 
 
 
-reward1 = average_plot(np.load("./InvertedPendulum/Good/seed_1/reward.npy"),20
+reward1 = average_plot(np.load("./reward.npy"),200
                        )
-steps1 = np.load("./InvertedPendulum/Good/seed_1/steps.npy").tolist()[0:len(reward1)]
-
+steps1 = np.load("./steps.npy").tolist()[0:len(reward1)]
+'''
 reward2 = average_plot(np.load("./InvertedPendulum/Good/seed_2/reward.npy"),20
                        )
 steps2 = np.load("./InvertedPendulum/Good/seed_2/steps.npy").tolist()[0:len(reward2)]
@@ -33,16 +33,16 @@ steps3= np.load("./InvertedPendulum/Good/seed_3/steps.npy").tolist()[0:len(rewar
 
 
 
-
+'''
 
 
 
 plt.figure()
 plt.title("InvertedPendulum Good")
 plt.plot(steps1,reward1)
-plt.plot(steps2,reward2)
+'''plt.plot(steps2,reward2)
 plt.plot(steps3,reward3)
-
+'''
 #plt.plot(real_steps1,real_reward1)
 #plt.plot(real_steps2,real_reward2)
 
@@ -54,8 +54,8 @@ plt.legend(["seed_1","seed_2","seed_3"], loc ="best")
 #
 #plt.plot(steps,rewards)
 
-#plt.show()
-plt.savefig("./InvertedPendulum_Good.png")
+plt.show()
+#plt.savefig("./InvertedPendulum_Good.png")
 
 
 
