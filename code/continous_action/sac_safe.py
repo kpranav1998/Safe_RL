@@ -171,13 +171,6 @@ class SAC_Safe(object):
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
 
-        if(updates > int(2e6) and updates <= int(3e6)):
-            self.target_update_interval = 90
-
-        if(updates > int(3e6)):
-            self.target_update_interval = 60
-
-
         return qf1_loss.item(), qf2_loss.item(), policy_loss.item(), alpha_loss.item(), alpha_tlogs.item(), uncertainity, safe_uncertainity
 
     # Save model parameters
