@@ -16,11 +16,11 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="InvertedPendulum-v2",
+parser.add_argument('--env-name', default="Humanoid-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="../input/mujoco-test2/model_130.0.pkl")
+parser.add_argument('--safe_path',type=str,default="./results/model_1668.6427342259678.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -39,11 +39,11 @@ parser.add_argument('--alpha', type=float, default=0.2, metavar='G',
                             term against the reward (default: 0.2)')
 parser.add_argument('--automatic_entropy_tuning', type=bool, default=False, metavar='G',
                     help='Automaically adjust α (default: False)')
-parser.add_argument('--seed', type=int, default=86624 , metavar='N',
+parser.add_argument('--seed', type=int, default=random.randint(1,100000)  , metavar='N',
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(1e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5.01e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -51,7 +51,7 @@ parser.add_argument('--updates_per_step', type=int, default=1, metavar='N',
                     help='model updates per simulator step (default: 1)')
 parser.add_argument('--start_steps', type=int, default=100, metavar='N',
                     help='Steps sampling random actions (default: 10000)')
-parser.add_argument('--target_update_interval', type=int, default=30, metavar='N',
+parser.add_argument('--target_update_interval', type=int, default=60, metavar='N',
                     help='Value target update per no. of updates per step (default: 1)')
 parser.add_argument('--replay_size', type=int, default=1000000, metavar='N',
                     help='size of replay buffer (default: 10000000)')
@@ -94,12 +94,14 @@ memory = ReplayMemory(args.replay_size, args.seed)
 
 
 run_num = 0
-reward_list = np.load("../input/mujoco-test2/reward_safe2.npy").tolist()
-uncertainity_list = np.load("../input/mujoco-test2/uncertainity_safe2.npy",allow_pickle=True).tolist()
-steps = np.load("../input/mujoco-test2/steps_safe2.npy").tolist()
+reward_list = np.load("./results/reward.npy").tolist()
+uncertainity_list = np.load("./results/uncertainity.npy",allow_pickle=True).tolist()
+steps = np.load("./results/steps.npy").tolist()
 
+
+start_step_number = int(3e6)
 i = 0
-while(steps[i] < 900600):
+while(steps[i] < start_step_number):
     i = i + 1
 
 reward_list = reward_list[0:i]
@@ -107,7 +109,7 @@ steps = steps[0:i]
 uncertainity_list = uncertainity_list[0:i]
 
 
-total_numsteps = 930033
+total_numsteps = start_step_number
 updates = 0
 
 
@@ -211,7 +213,7 @@ for i_episode in itertools.count(1):
     writer.add_scalar('reward/train', episode_reward, i_episode)
     print("Episode: {}, total numsteps: {}, episode steps: {}, reward: {}".format(i_episode, total_numsteps, episode_steps, round(episode_reward, 2)))
 
-    if i_episode % 10 == 0 and args.eval is True:
+    if i_episode % 150 == 0 and args.eval is True:
         avg_reward = 0.
         episodes = 10
         for _  in range(episodes):
@@ -236,7 +238,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 20 == 0):
+    if(i_episode % 50 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

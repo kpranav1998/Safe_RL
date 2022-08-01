@@ -18,10 +18,18 @@ def average_plot(l,margin=100):
 reward = np.load("./reward.npy")
 
 steps = np.load("./steps.npy")
-uncertainity = np.load("./uncertainity.npy",allow_pickle=True).tolist()
 
-reward = average_plot(reward,100)
-steps = average_plot(steps,100)
+reward_baseline = np.load("./reward_baseline.npy")
+
+steps_baseline = np.load("./steps_baseline.npy")
+#uncertainity = np.load("./uncertainity.npy",allow_pickle=True).tolist()
+
+reward = average_plot(reward,200)
+steps = average_plot(steps,200)
+
+
+reward_baseline = average_plot(reward_baseline,200)
+steps_baseline = average_plot(steps_baseline,200)
 
 '''i = 0
 while(steps[i] < int(2e6)):
@@ -37,6 +45,10 @@ np.save("./uncertainity.npy",uncertainity)'''
 
 plt.figure()
 plt.plot(steps,reward)
+plt.plot(steps_baseline,reward_baseline)
+
+plt.axhline(y = 0, color ="green", linestyle ="--")
+plt.fill_between(steps,2331+1416,2331-1416, alpha=0.2, color='b')
 
 plt.show()
 

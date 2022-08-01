@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 class GridWorld():
-    def set(self):
+    def __init__(self):
         self.state = np.zeros((4,4))
         self.player = None ## 1 ##
         self.pit = (1,2) ## 2 ##
@@ -11,6 +11,10 @@ class GridWorld():
         
         self.state[self.player] = 1
         self.state[self.pit] = 2
+        self.state[(1,3)] = 2
+        self.state[(2,1)] = 2
+
+
         self.state[self.goal] = 3
 
 

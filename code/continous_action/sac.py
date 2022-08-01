@@ -20,7 +20,7 @@ class SAC(object):
         self.target_update_interval = args.target_update_interval
         self.automatic_entropy_tuning = args.automatic_entropy_tuning
 
-        self.device = 'cpu'  #torch.device("cuda" if args.cuda else "cpu")
+        self.device ='cpu'# torch.device("cuda" if args.cuda else "cpu")
 
 
         self.value_network = VPrior(n_ensemble=self.n_ensemble,num_inputs=num_inputs,hidden_dim=args.hidden_size)

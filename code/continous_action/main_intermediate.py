@@ -16,7 +16,7 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="InvertedDoublePendulum-v2",
+parser.add_argument('--env-name', default="Humanoid-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
@@ -39,11 +39,11 @@ parser.add_argument('--alpha', type=float, default=0.2, metavar='G',
                             term against the reward (default: 0.2)')
 parser.add_argument('--automatic_entropy_tuning', type=bool, default=False, metavar='G',
                     help='Automaically adjust α (default: False)')
-parser.add_argument('--seed', type=int, default=22957 , metavar='N',
+parser.add_argument('--seed', type=int, default=18294 , metavar='N',
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(1e6), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
@@ -94,12 +94,12 @@ memory = ReplayMemory(args.replay_size, args.seed)
 
 
 run_num = 0
-reward_list = np.load("../input/mujoco-test/reward_safe3.npy").tolist()
-uncertainity_list = np.load("../input/mujoco-test/uncertainity_safe3.npy",allow_pickle=True).tolist()
-steps = np.load("../input/mujoco-test/steps_safe3.npy").tolist()
+reward_list = np.load("./results/Humanoid-v2_0/reward.npy").tolist()
+uncertainity_list = np.load("./results/Humanoid-v2_0/uncertainity.npy",allow_pickle=True).tolist()
+steps = np.load("./results/Humanoid-v2_0/steps.npy").tolist()
 
 i = 0
-while(steps[i] < 901158):
+while(steps[i] < 615250):
     i = i + 1
 
 reward_list = reward_list[0:i]
@@ -107,7 +107,7 @@ steps = steps[0:i]
 uncertainity_list = uncertainity_list[0:i]
 
 
-total_numsteps = 901158
+total_numsteps = 615250
 updates = 0
 
 
@@ -209,7 +209,7 @@ for i_episode in itertools.count(1):
     writer.add_scalar('reward/train', episode_reward, i_episode)
     print("Episode: {}, total numsteps: {}, episode steps: {}, reward: {}".format(i_episode, total_numsteps, episode_steps, round(episode_reward, 2)))
 
-    if i_episode % 10 == 0 and args.eval is True:
+    if i_episode % 150 == 0 and args.eval is True:
         avg_reward = 0.
         episodes = 10
         for _  in range(episodes):
@@ -234,7 +234,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 50 == 0):
+    if(i_episode % 150 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

@@ -17,7 +17,7 @@ class SAC_Safe(object):
         self.policy_type = args.policy
         self.target_update_interval = args.target_update_interval
         self.automatic_entropy_tuning = args.automatic_entropy_tuning
-        self.device = 'cpu' #torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = 'cpu'#torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         print(self.device)
 
@@ -167,8 +167,16 @@ class SAC_Safe(object):
             alpha_loss = torch.tensor(0.).to(self.device)
             alpha_tlogs = torch.tensor(self.alpha)  # For TensorboardX logs
 
+
         if updates % self.target_update_interval == 0:
             soft_update(self.critic_target, self.critic, self.tau)
+
+        if(updates > int(2e6) and updates <= int(3e6)):
+            self.target_update_interval = 90
+
+        if(updates > int(3e6)):
+            self.target_update_interval = 60
+
 
         return qf1_loss.item(), qf2_loss.item(), policy_loss.item(), alpha_loss.item(), alpha_tlogs.item(), uncertainity, safe_uncertainity
 
@@ -189,13 +197,6 @@ class SAC_Safe(object):
     def load_checkpoint_safe(self, ckpt_path, evaluate=False):
         print('Loading models from {}'.format(ckpt_path))
         if ckpt_path is not None:
-            '''c2 = torch.load("./results/Hopper-v2_safe_1/model_608.964345288995.pkl", map_location=self.device)
-            self.policy.load_state_dict(c2['policy_state_dict'])
-            self.critic.load_state_dict(c2['critic_state_dict'])
-            self.critic_target.load_state_dict(c2['critic_target_state_dict'])
-            self.critic_optim.load_state_dict(c2['critic_optimizer_state_dict'])
-            self.policy_optim.load_state_dict(c2['policy_optimizer_state_dict'])'''
-
             checkpoint = torch.load(ckpt_path, map_location=self.device)
             self.safe_critic.load_state_dict(checkpoint['critic_state_dict'])
             self.safe_policy.load_state_dict(checkpoint['policy_state_dict'])

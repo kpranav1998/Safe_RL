@@ -167,20 +167,13 @@ class SAC(object):
     def load_checkpoint(self, ckpt_path, evaluate=False):
         print('Loading models from {}'.format(ckpt_path))
         if ckpt_path is not None:
-            c2 = torch.load("../input/mujoco-test/model_9359.84850246756.pkl", map_location=self.device)
+            c2 = torch.load("./results/Humanoid-v2_0/model_5181.185832000584.pkl", map_location=self.device)
             self.policy.load_state_dict(c2['policy_state_dict'])
             self.critic.load_state_dict(c2['critic_state_dict'])
             self.critic_target.load_state_dict(c2['critic_target_state_dict'])
             self.critic_optim.load_state_dict(c2['critic_optimizer_state_dict'])
             self.policy_optim.load_state_dict(c2['policy_optimizer_state_dict'])
-
-            if evaluate:
-                self.policy.eval()
-                self.critic.eval()
-                self.critic_target.eval()
-            else:
-                self.policy.train()
-                self.critic.train()
-                self.critic_target.train()
+            self.value_network.load_state_dict(c2['value_state_dict'])
+            self.value_optim.load_state_dict(c2['value_optimizer_state_dict'])
 
 

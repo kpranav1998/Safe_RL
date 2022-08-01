@@ -16,12 +16,12 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="InvertedPendulum-v2",
+parser.add_argument('--env-name', default="Humanoid-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.005,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="../input/mujocotest3/model_91.0.pkl")
-parser.add_argument('--baseline_performance',default=130, help='Give value of baseline')
+parser.add_argument('--safe_path',type=str,default="./baselines/Humanoid_3601.1424587079396.pkl")
+parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
 parser.add_argument('--policy', default="Gaussian",
@@ -43,15 +43,15 @@ parser.add_argument('--seed', type=int, default=random.randint(1,100000) , metav
                     help='random seed (default: 123456)')
 parser.add_argument('--batch_size', type=int, default=256, metavar='N',
                     help='batch size (default: 256)')
-parser.add_argument('--num_steps', type=int, default=int(3e5), metavar='N',
+parser.add_argument('--num_steps', type=int, default=int(5e6), metavar='N',
                     help='maximum number of steps (default: 1000000)')
 parser.add_argument('--hidden_size', type=int, default=256, metavar='N',
                     help='hidden size (default: 256)')
 parser.add_argument('--updates_per_step', type=int, default=1, metavar='N',
                     help='model updates per simulator step (default: 1)')
-parser.add_argument('--start_steps', type=int, default=10000, metavar='N',
+parser.add_argument('--start_steps', type=int, default=100, metavar='N',
                     help='Steps sampling random actions (default: 10000)')
-parser.add_argument('--target_update_interval', type=int, default=20, metavar='N',
+parser.add_argument('--target_update_interval', type=int, default=120, metavar='N',
                     help='Value target update per no. of updates per step (default: 1)')
 parser.add_argument('--replay_size', type=int, default=1000000, metavar='N',
                     help='size of replay buffer (default: 10000000)')
@@ -94,14 +94,12 @@ memory = ReplayMemory(args.replay_size, args.seed)
 
 
 run_num = 0
-
 reward_list = []
 uncertainity_list = []
 steps = []
-
-total_numsteps = 0
+LCB_diff = []
 updates = 0
-
+total_numsteps = 0
 
 
 def average_plot(list,y_label,save_path, margin=3):
@@ -134,8 +132,6 @@ for i in range(50):
 
             action,_,_,_,_,_ = agent.select_action(state,evaluate=True,begin=True)  # Sample random action
             next_state, reward, done, _ = env.step(action) # Step
-            episode_steps += 1
-            total_numsteps += 1
             episode_reward += reward
             mask = 1 if episode_steps == env._max_episode_steps else float(not done)
             state = next_state
@@ -145,8 +141,8 @@ for i in range(50):
 
 print("mean_reward:",np.mean(episodes))
 print("std_reward:",np.std(episodes))
-'''
 
+'''
 for i_episode in itertools.count(1):
     episode_reward = 0
     episode_steps = 0
@@ -154,15 +150,15 @@ for i_episode in itertools.count(1):
     state = env.reset()
     episode_uncertainity = []
     while not done:
-        if args.start_steps > total_numsteps:
-            action,_,_,_,_,_ = agent.select_action(state,evaluate=True,begin=True)  # Sample random action
-        else:
-            action,lcb,lcb_safe,lcb_diff,q,q_safe = agent.select_action(state)  # Sample action from policy
-            writer.add_scalar('uncertainity/LCB', lcb, updates)
-            writer.add_scalar('uncertainity/LCB_Safe', lcb_safe, updates)
-            writer.add_scalar('uncertainity/LCB_diff', lcb_diff, updates)
-            writer.add_scalar('uncertainity/Q', q, updates)
-            writer.add_scalar('uncertainity/Q_safe', q_safe, updates)
+
+        action,lcb,lcb_safe,lcb_diff,q,q_safe = agent.select_action(state)  # Sample action from policy
+        writer.add_scalar('uncertainity/LCB', lcb, updates)
+        writer.add_scalar('uncertainity/LCB_Safe', lcb_safe, updates)
+        writer.add_scalar('uncertainity/LCB_diff', lcb_diff, updates)
+        writer.add_scalar('uncertainity/Q', q, updates)
+        writer.add_scalar('uncertainity/Q_safe', q_safe, updates)
+
+        LCB_diff.append(lcb_diff.detach().cpu().numpy()[0])
 
 
         if len(memory) > args.batch_size:
@@ -198,14 +194,16 @@ for i_episode in itertools.count(1):
     uncertainity_list.append(episode_uncertainity)
     reward_list.append(episode_reward)
     steps.append(total_numsteps)
-    np.save(os.path.join(model_base_filedir,'uncertainity.npy'), uncertainity_list)
-    np.save(os.path.join(model_base_filedir,'reward.npy'), reward_list)
-    np.save(os.path.join(model_base_filedir,'steps.npy'), steps)
+    np.save(os.path.join(model_base_filedir,'uncertainity_safe3.npy'), uncertainity_list)
+    np.save(os.path.join(model_base_filedir,'reward_safe3.npy'), reward_list)
+    np.save(os.path.join(model_base_filedir,'steps_safe3.npy'), steps)
+    np.save(os.path.join(model_base_filedir,'LCB_diff3.npy'), LCB_diff)
+
 
     writer.add_scalar('reward/train', episode_reward, i_episode)
     print("Episode: {}, total numsteps: {}, episode steps: {}, reward: {}".format(i_episode, total_numsteps, episode_steps, round(episode_reward, 2)))
 
-    if i_episode % 10 == 0 and args.eval is True:
+    if i_episode % 150 == 0 and args.eval is True:
         avg_reward = 0.
         episodes = 10
         for _  in range(episodes):
@@ -230,7 +228,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 20 == 0):
+    if(i_episode % 150 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

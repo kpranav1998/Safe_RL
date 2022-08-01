@@ -18,9 +18,9 @@ def average_plot(l,margin=100):
 
 
 
-reward1 = average_plot(np.load("./reward.npy"),200
+reward1 = average_plot(np.load("./reward_safe1.npy"),200
                        )
-steps1 = np.load("./steps.npy").tolist()[0:len(reward1)]
+steps1 = np.load("./steps_safe1.npy").tolist()[0:len(reward1)]
 '''
 reward2 = average_plot(np.load("./InvertedPendulum/Good/seed_2/reward.npy"),20
                        )
