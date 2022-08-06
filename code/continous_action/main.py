@@ -217,7 +217,7 @@ for i_episode in itertools.count(1):
         print("Test Episodes: {}, Avg. Reward: {}".format(episodes, round(avg_reward, 2)))
         print("----------------------------------------")
 
-    if(i_episode % 100 == 0):
+    if(i_episode % 20 == 0):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()

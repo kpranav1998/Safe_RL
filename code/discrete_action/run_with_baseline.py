@@ -446,7 +446,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-c', '--cuda', action='store_true', default=True)
     parser.add_argument('-l', '--model_loadpath', default='', help='.pkl model file full path')
-    parser.add_argument('-s', '--safe_model_loadpath',default='./results/enduro_rpf00/enduro_rpf_0001775667q.pkl', help='.pkl model file full path')
+    parser.add_argument('-s', '--safe_model_loadpath',default='', help='.pkl model file full path')
 
     parser.add_argument('-b', '--buffer_loadpath', default='', help='.npz replay buffer file full path')
     args = parser.parse_args()
@@ -458,9 +458,9 @@ if __name__ == '__main__':
 
     info = {
         # "GAME":'roms/breakout.bin', # gym prefix
-        "GAME": 'roms/enduro.bin',  # gym prefix
+        "GAME": 'roms/breakout.bin',  # gym prefix
         "DEVICE": device,  # cpu vs gpu set by argument
-        "NAME": 'enduro_safe_v2_',  # start files with name
+        "NAME": 'breakout_safe_v2_',  # start files with name
         "DUELING": True,  # use dueling dqn
         "DOUBLE_DQN": True,  # use double dqn
         "PRIOR": True,  # turn on to use randomized prior
@@ -626,6 +626,6 @@ if __name__ == '__main__':
         print("loaded model state_dicts")
         
 
-    baseline_evaluate()
-    #train(0, start_last_save)
+    #baseline_evaluate()
+    train(0, start_last_save)
     #train(steps_save[len(steps_save) - 1], start_last_save)

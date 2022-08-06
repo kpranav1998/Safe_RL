@@ -73,7 +73,7 @@ class SAC_Safe(object):
         value = torch.cat(value, 0)
         value_mean = torch.mean(value, axis=0)
         value_std = torch.std(value, axis=0)
-        LCB_safe = value_mean + self.lcb_constant * value_std
+        UCB_safe = value_mean + self.lcb_constant * value_std
 
         safe_action, _, _ = self.safe_policy(state)
         action_size = 0
@@ -95,16 +95,16 @@ class SAC_Safe(object):
 
         if evaluate is False:
 
-            if (LCB < LCB_safe):
-                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
+            if (LCB < UCB_safe):
+                return safe_action.detach().cpu().numpy()[0], LCB, UCB_safe, (UCB_safe - LCB), q_mean, value_mean
             else:
-                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
+                return action.detach().cpu().numpy()[0], LCB, UCB_safe, (UCB_safe - LCB), q_mean, value_mean
 
         else:
             if (begin == True):
-                return safe_action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
+                return safe_action.detach().cpu().numpy()[0], LCB, UCB_safe, (UCB_safe - LCB), q_mean, value_mean
             else:
-                return action.detach().cpu().numpy()[0], LCB, LCB_safe, (LCB_safe - LCB), q_mean, value_mean
+                return action.detach().cpu().numpy()[0], LCB, UCB_safe, (UCB_safe - LCB), q_mean, value_mean
 
     def update_parameters(self, memory, batch_size, updates):
         # Sample a batch from memory
