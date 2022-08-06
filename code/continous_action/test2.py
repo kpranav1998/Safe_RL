@@ -43,7 +43,7 @@ np.save("./reward.npy",reward)
 np.save("./steps.npy",steps)
 np.save("./uncertainity.npy",uncertainity)'''
 
-reward = average_plot(reward,200)
+reward = average_plot(reward,1000)
 
 plt.figure()
 plt.plot(reward)
