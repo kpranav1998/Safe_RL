@@ -63,21 +63,14 @@ def average_plot(l,margin=100):
 
 
 
-reward_agent = np.load("./reward.npy")
-steps_agent = np.load("./steps.npy")
+reward_agent = np.load("./reward_safe.npy")
+steps_agent = np.load("./steps_safe.npy")
 
 
 reward_agent = average_plot(reward_agent,200)
 steps_agent = steps_agent[0:len(reward_agent)]
 
-reward_safe = np.load("./reward (4).npy")
-stesp_safe = np.load("./steps (2).npy")
-
-reward_safe = average_plot(reward_safe,200)
-stesp_safe = steps_agent[0:len(reward_safe)]
-
 plt.plot(steps_agent,reward_agent)
-plt.plot(stesp_safe,reward_safe)
 
 #plt.plot(reward_safe)
 
