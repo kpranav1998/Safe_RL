@@ -16,11 +16,11 @@ import json
 
 
 parser = argparse.ArgumentParser(description='PyTorch Soft Actor-Critic Args')
-parser.add_argument('--env-name', default="Ant-v2",
+parser.add_argument('--env-name', default="Humanoid-v2",
                     help='Mujoco Gym environment (default: HalfCheetah-v2)')
 parser.add_argument('--lcb', default=0.1,type=float,
                     help='LCB constant value')
-parser.add_argument('--safe_path',type=str,default="./results/Ant_4399.221446889729.pkl")
+parser.add_argument('--safe_path',type=str,default="./results/Humanoid_1100.4435116431819.pkl")
 parser.add_argument('--baseline_performance',default=1307, help='Give value of baseline')
 parser.add_argument('--n_ensemble', default=3,type=int,
                     help='number of ensemble members')
@@ -121,7 +121,7 @@ def average_plot(list,y_label,save_path, margin=3):
 
 episodes = []
 
-'''
+
 for i in range(50):
     state = env.reset()
     done = False
@@ -232,3 +232,4 @@ for i_episode in itertools.count(1):
         agent.save_checkpoint(args.env_name,ckpt_path=os.path.join(model_base_filedir,"model_"+str(episode_reward)+".pkl"))
 
 env.close()
+'''

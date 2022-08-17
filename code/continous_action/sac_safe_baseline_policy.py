@@ -51,6 +51,7 @@ class SAC_Safe(object):
             self.policy_optim = Adam(self.policy.parameters(), lr=args.lr)
             ck1 = torch.load(args.safe_path, map_location=self.device)
             self.policy_optim.load_state_dict(ck1['policy_optimizer_state_dict'])
+            self.policy.load_state_dict(ck1['policy_state_dict'])
 
         else:
             self.alpha = 0
@@ -199,7 +200,7 @@ class SAC_Safe(object):
             self.safe_critic.load_state_dict(checkpoint['critic_state_dict'])
             self.safe_policy.load_state_dict(checkpoint['policy_state_dict'])
             self.safe_value_network.load_state_dict(checkpoint['value_state_dict'])
-            #self.policy.load_state_dict(checkpoint['policy_state_dict'])
+            
             
 
 
