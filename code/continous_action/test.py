@@ -74,5 +74,5 @@ plt.plot(steps_agent,reward_agent)
 
 #plt.plot(reward_safe)
 
-plt.show()
-
+#plt.show()
+plt.savefig("./test.jpg")
